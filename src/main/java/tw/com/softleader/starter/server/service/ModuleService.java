@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toSet;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
@@ -19,6 +20,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 
+import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,7 +48,8 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
   @Autowired
   private ModuleDao dao;
 
-  public Map<ZipArchiveEntry, byte[]> collectSnippets(Starter starter) throws JsonProcessingException {
+  public Map<ArchiveEntry, ByteArrayInputStream> collectSnippets(Starter starter)
+      throws JsonProcessingException {
     List<Module> snippets = dao.findByArtifactIsNull();
     log.debug("Found {} global snippets", snippets.size());
 
@@ -89,8 +92,8 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
       this.formatter = new SnippetSource(this.starter);
     }
 
-    Map<ZipArchiveEntry, byte[]> collect() {
-      Map<ZipArchiveEntry, byte[]> archives = new HashMap<>();
+    Map<ArchiveEntry, ByteArrayInputStream> collect() {
+      Map<ArchiveEntry, ByteArrayInputStream> archives = new HashMap<>();
 
       starter.getProject().getDirs().stream().map(formatter).forEach(dir -> {
         String entryName = formatter.apply(dir + "/");
@@ -104,7 +107,7 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
       return archives;
     }
 
-    private void collect(Map<ZipArchiveEntry, byte[]> archives, String src)
+    private void collect(Map<ArchiveEntry, ByteArrayInputStream> archives, String src)
         throws IOException, ClassNotFoundException, URISyntaxException {
       Path path = Paths.get(src);
       if (Files.notExists(path)) {
@@ -122,8 +125,8 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
       }
     }
 
-    private void collectRecursive(Map<ZipArchiveEntry, byte[]> archives, String root, Path path)
-        throws IOException {
+    private void collectRecursive(Map<ArchiveEntry, ByteArrayInputStream> archives, String root,
+        Path path) throws IOException {
       if (Files.isDirectory(path)) {
         if (Files.list(path).iterator().hasNext()) {
           Files.list(path).forEach(Unchecked.accept(p -> collectRecursive(archives, root, p)));
@@ -140,7 +143,7 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
       }
     }
 
-    private byte[] readContent(Path path) throws IOException {
+    private ByteArrayInputStream readContent(Path path) throws IOException {
       Function<String, String> converter = formatter;
       if (path.getFileName().equals("pom.xml")) {
         converter = converter.compose(new Pom(starter));
@@ -154,7 +157,7 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
       try {
         String content = Files.readAllLines(path).stream().collect(joining("\n"));
         content = converter.apply(content);
-        return content.getBytes(StandardCharsets.UTF_8);
+        return new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
       } catch (Exception e) {
         throw new RuntimeException("Reading [" + path.getFileName() + "] faild", e);
       }

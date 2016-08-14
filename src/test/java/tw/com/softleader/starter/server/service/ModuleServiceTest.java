@@ -1,5 +1,6 @@
 package tw.com.softleader.starter.server.service;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -10,7 +11,8 @@ import java.util.Map;
 
 import javax.transaction.Transactional;
 
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.ArchiveEntry;
+import org.apache.commons.compress.archivers.ArchiveException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +22,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import tw.com.softleader.commons.collect.Lists;
-import tw.com.softleader.commons.compress.ZipStream;
+import tw.com.softleader.commons.compress.ArchiveStream;
+import tw.com.softleader.commons.compress.ArchiveStream.Archiver;
 import tw.com.softleader.domain.config.DefaultDomainConfiguration;
 import tw.com.softleader.starter.server.config.DataSourceConfig;
 import tw.com.softleader.starter.server.config.ServiceConfig;
@@ -66,16 +69,17 @@ public class ModuleServiceTest {
   }
 
   @Test
-  public void testCollectSnippets() throws FileNotFoundException, IOException {
-    Map<ZipArchiveEntry, byte[]> archives = snippetService.collectSnippets(starter);
-    File zip = new File("/Users/Matt/temp/test.zip");
-    ZipStream.of(new FileOutputStream(zip)).compress(archives);;
-    System.out.println(zip.getPath() + " created!");
-    System.out.println(zip.exists());
+  public void testCollectSnippets() throws FileNotFoundException, IOException, ArchiveException {
+    Map<ArchiveEntry, ByteArrayInputStream> archives = snippetService.collectSnippets(starter);
+    File archive = new File("/Users/Matt/temp/test.zip");
+    ArchiveStream.of(new FileOutputStream(archive)).compress(Archiver.ZIP, archives);
+    System.out.println(archive.getPath() + " created!");
+    System.out.println(archive.exists());
   }
 
   @Test
-  public void testCollectSnippetsAndSnippets() throws FileNotFoundException, IOException {
+  public void testCollectSnippetsAndSnippets()
+      throws FileNotFoundException, IOException, ArchiveException {
     Collection<Module> snippets = new ArrayList<>();
     Module s = new Module();
     s.setArtifact("tw.com.softleader:softleader-web");
@@ -94,10 +98,10 @@ public class ModuleServiceTest {
     s.setSnippets(Lists.newArrayList());
     snippets.add(s);
 
-    Map<ZipArchiveEntry, byte[]> archives =
+    Map<ArchiveEntry, ByteArrayInputStream> archives =
         new ModuleService.ArchiveEntries(starter, snippets).collect();
     File zip = new File("/Users/Matt/temp/test.zip");
-    ZipStream.of(new FileOutputStream(zip)).compress(archives);
+    ArchiveStream.of(new FileOutputStream(zip)).compress(Archiver.ZIP, archives);
     System.out.println(zip.getPath() + " created!");
     System.out.println(zip.exists());
   }

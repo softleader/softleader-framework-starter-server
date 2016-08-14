@@ -1,12 +1,13 @@
 package tw.com.softleader.starter.server.web;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.ArchiveEntry;
+import org.apache.commons.compress.archivers.ArchiveException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,7 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import tw.com.softleader.commons.compress.ZipStream;
+import tw.com.softleader.commons.compress.ArchiveStream;
+import tw.com.softleader.commons.compress.ArchiveStream.Archiver;
 import tw.com.softleader.starter.server.pojo.Starter;
 import tw.com.softleader.starter.server.service.ModuleService;
 
@@ -28,9 +30,9 @@ public class AppController {
   @RequestMapping(value = "/zip", method = RequestMethod.POST, consumes = "application/json",
       produces = "application/zip")
   public void zip(@RequestBody @Validated Starter starter, HttpServletResponse response)
-      throws IOException {
-    Map<ZipArchiveEntry, byte[]> archives = service.collectSnippets(starter);
-    ZipStream.of(response.getOutputStream()).compress(archives);
+      throws IOException, ArchiveException {
+    Map<ArchiveEntry, ByteArrayInputStream> archives = service.collectSnippets(starter);
+    ArchiveStream.of(response.getOutputStream()).compress(Archiver.ZIP, archives);
   }
 
 }
