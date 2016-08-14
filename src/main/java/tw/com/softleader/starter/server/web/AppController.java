@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import tw.com.softleader.commons.compress.ArchiveStream;
-import tw.com.softleader.commons.compress.ArchiveStream.Archiver;
 import tw.com.softleader.starter.server.pojo.Starter;
 import tw.com.softleader.starter.server.service.ModuleService;
 
