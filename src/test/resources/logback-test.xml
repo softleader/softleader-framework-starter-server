@@ -13,7 +13,6 @@
 	</root>
 	
 <!-- 	<logger name="tw.com.softleader" level="info" /> -->
-<!-- 	<logger name="tw.com.softleader.starter.server" level="debug" /> -->
-	<logger name="tw.com.softleader.starter.server.service.SnippetService" level="debug" />
+	<logger name="tw.com.softleader.starter.server" level="debug" />
 
 </configuration>
