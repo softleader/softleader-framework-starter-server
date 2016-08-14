@@ -1,7 +1,7 @@
 package tw.com.softleader.starter.server.web;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
@@ -31,7 +31,7 @@ public class AppController {
       produces = "application/zip")
   public void zip(@RequestBody @Validated Starter starter, HttpServletResponse response)
       throws IOException, ArchiveException {
-    Map<ArchiveEntry, ByteArrayInputStream> archives = service.collectSnippets(starter);
+    Map<ArchiveEntry, InputStream> archives = service.collectSnippets(starter);
     ArchiveStream.of(response.getOutputStream()).compress(Archiver.ZIP, archives);
   }
 

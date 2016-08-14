@@ -6,6 +6,7 @@ import static java.util.stream.Collectors.toSet;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -48,7 +49,7 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
   @Autowired
   private ModuleDao dao;
 
-  public Map<ArchiveEntry, ByteArrayInputStream> collectSnippets(Starter starter)
+  public Map<ArchiveEntry, InputStream> collectSnippets(Starter starter)
       throws JsonProcessingException {
     List<Module> snippets = dao.findByArtifactIsNull();
     log.debug("Found {} global snippets", snippets.size());
@@ -92,8 +93,8 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
       this.formatter = new SnippetSource(this.starter);
     }
 
-    Map<ArchiveEntry, ByteArrayInputStream> collect() {
-      Map<ArchiveEntry, ByteArrayInputStream> archives = new HashMap<>();
+    Map<ArchiveEntry, InputStream> collect() {
+      Map<ArchiveEntry, InputStream> archives = new HashMap<>();
 
       starter.getProject().getDirs().stream().map(formatter).forEach(dir -> {
         String entryName = formatter.apply(dir + "/");
@@ -107,7 +108,7 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
       return archives;
     }
 
-    private void collect(Map<ArchiveEntry, ByteArrayInputStream> archives, String src)
+    private void collect(Map<ArchiveEntry, InputStream> archives, String src)
         throws IOException, ClassNotFoundException, URISyntaxException {
       Path path = Paths.get(src);
       if (Files.notExists(path)) {
@@ -125,7 +126,7 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
       }
     }
 
-    private void collectRecursive(Map<ArchiveEntry, ByteArrayInputStream> archives, String root,
+    private void collectRecursive(Map<ArchiveEntry, InputStream> archives, String root,
         Path path) throws IOException {
       if (Files.isDirectory(path)) {
         if (Files.list(path).iterator().hasNext()) {

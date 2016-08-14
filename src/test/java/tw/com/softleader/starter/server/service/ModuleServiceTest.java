@@ -1,10 +1,10 @@
 package tw.com.softleader.starter.server.service;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
@@ -70,7 +70,7 @@ public class ModuleServiceTest {
 
   @Test
   public void testCollectSnippets() throws FileNotFoundException, IOException, ArchiveException {
-    Map<ArchiveEntry, ByteArrayInputStream> archives = snippetService.collectSnippets(starter);
+    Map<ArchiveEntry, InputStream> archives = snippetService.collectSnippets(starter);
     File archive = new File("/Users/Matt/temp/test.zip");
     ArchiveStream.of(new FileOutputStream(archive)).compress(Archiver.ZIP, archives);
     System.out.println(archive.getPath() + " created!");
@@ -98,7 +98,7 @@ public class ModuleServiceTest {
     s.setSnippets(Lists.newArrayList());
     snippets.add(s);
 
-    Map<ArchiveEntry, ByteArrayInputStream> archives =
+    Map<ArchiveEntry, InputStream> archives =
         new ModuleService.ArchiveEntries(starter, snippets).collect();
     File zip = new File("/Users/Matt/temp/test.zip");
     ArchiveStream.of(new FileOutputStream(zip)).compress(Archiver.ZIP, archives);
