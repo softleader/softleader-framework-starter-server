@@ -36,7 +36,7 @@ public class ModuleSnippetTest {
   public void testGlobalmodule() {
     Module module = new Module();
     module.setSnippets(Lists
-        .newArrayList("/Users/Matt/git/softleader-framework-starter-server/doc/global-module"));
+        .newArrayList("/Users/Matt/git/softleader-framework-starter-server/snippet/global-module"));
     dao.save(module);
   }
 
@@ -50,7 +50,7 @@ public class ModuleSnippetTest {
     module.setServletFilters(Lists.newArrayList(
         "new org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter.OpenEntityManagerInViewFilter()"));
     module.setSnippets(Lists.newArrayList(
-        "/Users/Matt/git/softleader-framework-starter-server/doc/softleader-data-jpa"));
+        "/Users/Matt/git/softleader-framework-starter-server/snippet/softleader-data-jpa"));
     dao.save(module);
   }
 
@@ -60,7 +60,7 @@ public class ModuleSnippetTest {
     module.setArtifact("tw.com.softleader:softleader-domain-scheduling");
     module.setRootConfigs(Lists.newArrayList("SchedulingConfig.class"));
     module.setSnippets(Lists.newArrayList(
-        "/Users/Matt/git/softleader-framework-starter-server/doc/softleader-domain-scheduling"));
+        "/Users/Matt/git/softleader-framework-starter-server/snippet/softleader-domain-scheduling"));
     dao.save(module);
   }
 
@@ -80,7 +80,7 @@ public class ModuleSnippetTest {
     module.setRequires(Lists.newArrayList("tw.com.softleader:softleader-web-mvc"));
     module.setRootConfigs(Lists.newArrayList("WebSecurityConfig.class"));
     module.setSnippets(Lists.newArrayList(
-        "/Users/Matt/git/softleader-framework-starter-server/doc/softleader-security"));
+        "/Users/Matt/git/softleader-framework-starter-server/snippet/softleader-security"));
     dao.save(module);
   }
 
@@ -94,7 +94,7 @@ public class ModuleSnippetTest {
             "WebSecurityConfig.class", "ServiceConfig.class"));
     module.setServletConfigs(Lists.newArrayList("WebMvcConfig.class"));
     module.setSnippets(Lists.newArrayList(
-        "/Users/Matt/git/softleader-framework-starter-server/doc/softleader-web-mvc"));
+        "/Users/Matt/git/softleader-framework-starter-server/snippet/softleader-web-mvc"));
     dao.save(module);
   }
 
