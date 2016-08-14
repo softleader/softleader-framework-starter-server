@@ -6,8 +6,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,8 +31,8 @@ public class AppController {
       produces = "application/zip")
   public void zip(@RequestBody @Validated Starter starter, HttpServletResponse response)
       throws IOException, ArchiveException {
-    Map<ArchiveEntry, InputStream> archives = service.collectSnippets(starter);
-    ArchiveStream.of(response.getOutputStream()).compress(Archiver.ZIP, archives);
+    Map<ZipArchiveEntry, InputStream> archives = service.collectSnippets(starter);
+    ArchiveStream.of(response.getOutputStream()).compress(archives);
   }
 
 }

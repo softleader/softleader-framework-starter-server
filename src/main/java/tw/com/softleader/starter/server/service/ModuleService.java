@@ -21,7 +21,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 
-import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,7 +48,7 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
   @Autowired
   private ModuleDao dao;
 
-  public Map<ArchiveEntry, InputStream> collectSnippets(Starter starter)
+  public Map<ZipArchiveEntry, InputStream> collectSnippets(Starter starter)
       throws JsonProcessingException {
     List<Module> snippets = dao.findByArtifactIsNull();
     log.debug("Found {} global snippets", snippets.size());
@@ -93,8 +92,8 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
       this.formatter = new SnippetSource(this.starter);
     }
 
-    Map<ArchiveEntry, InputStream> collect() {
-      Map<ArchiveEntry, InputStream> archives = new HashMap<>();
+    Map<ZipArchiveEntry, InputStream> collect() {
+      Map<ZipArchiveEntry, InputStream> archives = new HashMap<>();
 
       starter.getProject().getDirs().stream().map(formatter).forEach(dir -> {
         String entryName = formatter.apply(dir + "/");
@@ -108,7 +107,7 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
       return archives;
     }
 
-    private void collect(Map<ArchiveEntry, InputStream> archives, String src)
+    private void collect(Map<ZipArchiveEntry, InputStream> archives, String src)
         throws IOException, ClassNotFoundException, URISyntaxException {
       Path path = Paths.get(src);
       if (Files.notExists(path)) {
@@ -126,8 +125,8 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
       }
     }
 
-    private void collectRecursive(Map<ArchiveEntry, InputStream> archives, String root,
-        Path path) throws IOException {
+    private void collectRecursive(Map<ZipArchiveEntry, InputStream> archives, String root, Path path)
+        throws IOException {
       if (Files.isDirectory(path)) {
         if (Files.list(path).iterator().hasNext()) {
           Files.list(path).forEach(Unchecked.accept(p -> collectRecursive(archives, root, p)));
