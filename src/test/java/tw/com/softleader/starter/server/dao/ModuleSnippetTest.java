@@ -35,8 +35,8 @@ public class ModuleSnippetTest {
   @Test
   public void testGlobalmodule() {
     Module module = new Module();
-    module.setSnippets(Lists
-        .newArrayList("/Users/Matt/git/softleader-framework-starter-server/snippet/global-module"));
+    module.setSnippets(
+        Lists.newArrayList("/Users/Matt/git/softleader-framework-starter-server/snippet/global"));
     dao.save(module);
   }
 
