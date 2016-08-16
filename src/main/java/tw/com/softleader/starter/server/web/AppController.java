@@ -15,10 +15,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
+import lombok.extern.slf4j.Slf4j;
 import tw.com.softleader.commons.compress.ArchiveStream;
 import tw.com.softleader.starter.server.pojo.Starter;
 import tw.com.softleader.starter.server.service.ModuleService;
 
+@Slf4j
 @RestController
 @RequestMapping("/app")
 public class AppController {
@@ -30,6 +35,11 @@ public class AppController {
       produces = "application/zip")
   public void zip(@RequestBody @Validated Starter starter, HttpServletResponse response)
       throws IOException, ArchiveException {
+    if (log.isInfoEnabled()) {
+      ObjectMapper mapper = new ObjectMapper();
+      mapper.enable(SerializationFeature.INDENT_OUTPUT);
+      log.info("{}", mapper.writeValueAsString(starter));
+    }
     Map<ZipArchiveEntry, InputStream> archives = service.collectSnippets(starter);
     ArchiveStream.of(response.getOutputStream()).compress(archives);
   }

@@ -125,8 +125,8 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
       }
     }
 
-    private void collectRecursive(Map<ZipArchiveEntry, InputStream> archives, String root, Path path)
-        throws IOException {
+    private void collectRecursive(Map<ZipArchiveEntry, InputStream> archives, String root,
+        Path path) throws IOException {
       if (Files.isDirectory(path)) {
         if (Files.list(path).iterator().hasNext()) {
           Files.list(path).forEach(Unchecked.accept(p -> collectRecursive(archives, root, p)));
@@ -145,13 +145,13 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
 
     private ByteArrayInputStream readContent(Path path) throws IOException {
       Function<String, String> converter = formatter;
-      if (path.getFileName().equals("pom.xml")) {
+      if (path.getFileName().endsWith("pom.xml")) {
         converter = converter.compose(new Pom(starter));
       } else if (path.getFileName().endsWith("WebApplicationInitializer.java")) {
         converter = converter.compose(new WebApplicationInitializer(starter));
       } else if (path.getFileName().endsWith(".component")) {
         converter = converter.compose(new Component(starter));
-      } else if (path.getFileName().equals("datasource.properties")) {
+      } else if (path.getFileName().endsWith("datasource.properties")) {
         converter = converter.compose(new Datasource(starter));
       }
       try {

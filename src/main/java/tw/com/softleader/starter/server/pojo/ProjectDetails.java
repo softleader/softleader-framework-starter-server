@@ -18,6 +18,7 @@ public class ProjectDetails {
   private @JsonIgnore Set<String> rootConfigs;
   private @JsonIgnore Set<String> servletConfigs;
   private @JsonIgnore Set<String> servletFilters;
+  private @JsonIgnore Set<String> dirs;
 
   @NotEmpty
   private String name;
@@ -29,7 +30,6 @@ public class ProjectDetails {
   private String artifactId;
   @NotEmpty
   private String version;
-  private Set<String> dirs;
 
   public void collectGlobalInfo(Collection<Module> modules) {
     rootConfigs =
