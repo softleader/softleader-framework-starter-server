@@ -22,18 +22,18 @@ import tw.com.softleader.commons.compress.ArchiveStream;
 import tw.com.softleader.starter.server.entity.Webapp;
 import tw.com.softleader.starter.server.pojo.Snippet;
 import tw.com.softleader.starter.server.service.ModuleService;
-import tw.com.softleader.starter.server.service.WebAppService;
+import tw.com.softleader.starter.server.service.WebappService;
 
 @Slf4j
 @RestController
 @RequestMapping("/webapp")
-public class WebAppController {
+public class WebappController {
 
   @Autowired
   private ModuleService moduleService;
 
   @Autowired
-  private WebAppService webAppService;
+  private WebappService webAppService;
 
 
   @RequestMapping(method = RequestMethod.GET)

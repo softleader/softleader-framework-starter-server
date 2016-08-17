@@ -9,7 +9,7 @@ import tw.com.softleader.starter.server.dao.WebappDao;
 import tw.com.softleader.starter.server.entity.Webapp;
 
 @Service
-public class WebAppService extends AbstractCrudService<Webapp, Long> {
+public class WebappService extends AbstractCrudService<Webapp, Long> {
 
   @Autowired
   private WebappDao dao;

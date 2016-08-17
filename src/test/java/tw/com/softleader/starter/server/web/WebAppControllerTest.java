@@ -33,7 +33,7 @@ import tw.com.softleader.starter.server.config.WebMvcConfig;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ServiceConfig.class, DataSourceConfig.class,
     DefaultDomainConfiguration.class, WebMvcConfig.class})
-public class WebAppControllerTest {
+public class WebappControllerTest {
 
   @Autowired
   private WebApplicationContext webApplicationContext;
