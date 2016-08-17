@@ -1,4 +1,4 @@
-package {pkg}.example.service.impl;
+package {pkg}.demo.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,9 +8,9 @@ import tw.com.softleader.domain.AbstractCrudCodeService;
 import tw.com.softleader.domain.exception.ValidationException;
 import tw.com.softleader.domain.guarantee.constraints.EntityUnique;
 import tw.com.softleader.domain.guarantee.constraints.EntityUpToDate;
-import {pkg}.example.dao.ExampleDao;
-import {pkg}.example.entity.Example;
-import {pkg}.example.service.ExampleService;
+import {pkg}.demo.dao.DemoDao;
+import {pkg}.demo.entity.Demo;
+import {pkg}.demo.service.DemoService;
 
 /**
  * 相關文件: https://github.com/softleader/softleader-framework-docs/wiki/Entity-Guarantee
@@ -19,19 +19,19 @@ import {pkg}.example.service.ExampleService;
  *
  */
 @Service
-public class ExampleServiceImpl extends AbstractCrudCodeService<Example, Long>
-    implements ExampleService {
+public class DemoServiceImpl extends AbstractCrudCodeService<Demo, Long>
+    implements DemoService {
 
   @Autowired
-  private ExampleDao sampleDao;
+  private DemoDao sampleDao;
 
   @Override
-  public CrudCodeDao<Example, Long> getDao() {
+  public CrudCodeDao<Demo, Long> getDao() {
     return sampleDao;
   }
 
   @Override
-  public Example save(@EntityUnique @EntityUpToDate Example entity)
+  public Demo save(@EntityUnique @EntityUpToDate Demo entity)
       throws ValidationException {
     return super.save(entity);
   }

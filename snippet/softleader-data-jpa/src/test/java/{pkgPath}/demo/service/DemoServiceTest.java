@@ -1,4 +1,4 @@
-package {pkg}.example.service;
+package {pkg}.demo.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -19,39 +19,39 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import {pkg}.config.DataSourceConfig;
 import {pkg}.config.ServiceConfig;
-import {pkg}.example.entity.ExampleAssociation;
-import {pkg}.example.entity.Example;
+import {pkg}.demo.entity.DemoAssociation;
+import {pkg}.demo.entity.Demo;
 import tw.com.softleader.domain.config.DefaultDomainConfiguration;
 import tw.com.softleader.domain.exception.AlreadyExistException;
 import tw.com.softleader.domain.exception.OutOfDateException;
 
-@WithMockUser("exmaple")
+@WithMockUser("demo")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(
     classes = {ServiceConfig.class, DataSourceConfig.class, DefaultDomainConfiguration.class})
 @Transactional
-public class ExampleServiceTest {
+public class DemoServiceTest {
 
   @Autowired
-  private ExampleService exampleService;
+  private DemoService demoService;
 
   /**
    * insert測試
    */
   @Test
   public void testInsert() throws Exception {
-    final Example entity = new Example();
+    final Demo entity = new Demo();
     entity.setCode(UUID.randomUUID().toString().replace("-", "").substring(0, 10));
     entity.setAge(10);
     entity.setBirthday(LocalDate.now().minusYears(entity.getAge()));
-    final Example saved = exampleService.save(entity);
+    final Demo saved = demoService.save(entity);
     Assert.assertEquals(entity, saved);
     Assert.assertNotNull(entity.getId());
     Assert.assertNotNull(entity.getCreatedBy());
-    Assert.assertEquals("exmaple", entity.getCreatedBy());
+    Assert.assertEquals("demo", entity.getCreatedBy());
     Assert.assertNotNull(entity.getCreatedTime());
     Assert.assertNotNull(entity.getModifiedBy());
-    Assert.assertEquals("exmaple", entity.getModifiedBy());
+    Assert.assertEquals("demo", entity.getModifiedBy());
     Assert.assertNotNull(entity.getModifiedTime());
   }
 
@@ -61,15 +61,15 @@ public class ExampleServiceTest {
   @Transactional(TxType.NOT_SUPPORTED)
   @Test(expected = AlreadyExistException.class)
   public void testDuplicateSave() {
-    final Example entity = new Example();
+    final Demo entity = new Demo();
     entity.setCode(UUID.randomUUID().toString().replace("-", "").substring(0, 10));
     entity.setAge(10);
     entity.setBirthday(LocalDate.now().minusYears(entity.getAge()));
-    exampleService.save(entity);
+    demoService.save(entity);
     Assert.assertNotNull(entity.getId());
 
     entity.setId(null);
-    exampleService.save(entity);
+    demoService.save(entity);
   }
 
   /**
@@ -78,14 +78,14 @@ public class ExampleServiceTest {
   @Transactional(TxType.NOT_SUPPORTED)
   @Test(expected = OutOfDateException.class)
   public void testOutOfDateSave() {
-    Example entity = new Example();
+    Demo entity = new Demo();
     entity.setCode(UUID.randomUUID().toString().replace("-", "").substring(0, 10));
     entity.setAge(10);
     entity.setBirthday(LocalDate.now().minusYears(entity.getAge()));
-    entity = exampleService.save(entity);
+    entity = demoService.save(entity);
 
     entity.setModifiedTime(entity.getModifiedTime().minusSeconds(10));
-    exampleService.save(entity);
+    demoService.save(entity);
   }
 
   /**
@@ -93,17 +93,17 @@ public class ExampleServiceTest {
    */
   @Test(expected = ConstraintViolationException.class)
   public void testAgeAndBirthdayViolation() {
-    final Example entity = new Example();
+    final Demo entity = new Demo();
     entity.setCode(UUID.randomUUID().toString().replace("-", "").substring(0, 10));
     entity.setAge(10);
     entity.setBirthday(LocalDate.now());
 
     try {
-      exampleService.save(entity);
+      demoService.save(entity);
     } catch (final ConstraintViolationException ex) {
       Assert.assertEquals(1, ex.getConstraintViolations().size()); // 預期1筆錯誤
       Assert.assertFalse(
-          ex.getConstraintViolations().iterator().next().getMessage().startsWith("example.")); // 預期錯誤要被翻譯過
+          ex.getConstraintViolations().iterator().next().getMessage().startsWith("demo.")); // 預期錯誤要被翻譯過
       throw ex;
     }
   }
@@ -113,21 +113,21 @@ public class ExampleServiceTest {
    */
   @Test
   public void testAssociations() throws Exception {
-    final Example entity = new Example();
+    final Demo entity = new Demo();
     entity.setCode(UUID.randomUUID().toString().replace("-", "").substring(0, 10));
     entity.setAge(10);
     entity.setBirthday(LocalDate.now().minusYears(entity.getAge()));
     entity.setAssociations(new ArrayList<>());
     final int associationSize = 2;
     IntStream.range(0, associationSize).forEach(i -> {
-      entity.addAssociation(new ExampleAssociation());
+      entity.addAssociation(new DemoAssociation());
     });
-    final Example saved = exampleService.save(entity);
+    final Demo saved = demoService.save(entity);
     Assert.assertNotNull(saved.getAssociations());
     Assert.assertEquals(associationSize, saved.getAssociations().size());
     saved.getAssociations().forEach(a -> {
       Assert.assertNotNull(a.getId());
-      Assert.assertNotNull(a.getExample());
+      Assert.assertNotNull(a.getDemo());
     });
   }
 

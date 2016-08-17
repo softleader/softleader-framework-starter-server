@@ -1,4 +1,4 @@
-package {pkg}.example.web;
+package {pkg}.demo.web;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -28,14 +28,14 @@ import tw.com.softleader.domain.config.DefaultDomainConfiguration;
 import {pkg}.config.DataSourceConfig;
 import {pkg}.config.ServiceConfig;
 import {pkg}.config.WebMvcConfig;
-import {pkg}.example.entity.Example;
+import {pkg}.demo.entity.Demo;
 
 @WebAppConfiguration
-@WithMockUser("exmaple")
+@WithMockUser("demo")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ServiceConfig.class, DataSourceConfig.class,
     DefaultDomainConfiguration.class, WebMvcConfig.class})
-public class ExampleControllerTest {
+public class DemoControllerTest {
 
   @Autowired
   private WebApplicationContext webApplicationContext;
@@ -53,19 +53,19 @@ public class ExampleControllerTest {
 
   @Test
   public void testSaveAndDelete() throws Exception {
-    final Example expected = new Example();
+    final Demo expected = new Demo();
     expected.setCode(UUID.randomUUID().toString().replace("-", "").substring(0, 10));
     expected.setAge(18);
     expected.setBirthday(LocalDate.now().minusYears(expected.getAge()));
-    expected.setEmail("example@softleader.com.tw");
+    expected.setEmail("demo@softleader.com.tw");
 
     String respone = mvc
-        .perform(post("/examples").contentType(MediaType.APPLICATION_JSON)
+        .perform(post("/demos").contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(expected)))
         .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
     Assert.assertNotNull(respone);
-    final Example actual = mapper.readValue(respone, Example.class);
+    final Demo actual = mapper.readValue(respone, Demo.class);
     Assert.assertNotNull(actual.getId());
     Assert.assertNotNull(actual.getCreatedBy());
     Assert.assertNotNull(actual.getCreatedTime());
@@ -76,9 +76,9 @@ public class ExampleControllerTest {
     Assert.assertEquals(expected.getBirthday(), actual.getBirthday());
     Assert.assertEquals(expected.getEmail(), actual.getEmail());
 
-    mvc.perform(delete("/examples/" + actual.getId())).andExpect(status().isOk());
+    mvc.perform(delete("/demos/" + actual.getId())).andExpect(status().isOk());
 
-    respone = mvc.perform(get("/examples/" + actual.getId())).andExpect(status().isOk()).andReturn()
+    respone = mvc.perform(get("/demos/" + actual.getId())).andExpect(status().isOk()).andReturn()
         .getResponse().getContentAsString();
     Assert.assertEquals("", respone);
   }

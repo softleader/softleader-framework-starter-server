@@ -1,4 +1,4 @@
-package {pkg}.example.entity;
+package {pkg}.demo.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,10 +22,10 @@ import tw.com.softleader.data.entity.GenericEntity;
 @Getter
 @Entity
 @Table(name = "EXAMPLE_ASSOCIATION")
-public class ExampleAssociation extends GenericEntity<Long> {
+public class DemoAssociation extends GenericEntity<Long> {
 
-  @JsonBackReference("example_associations")
+  @JsonBackReference("demo_associations")
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "EXAMPLE_ID")
-  private Example example;
+  private Demo demo;
 }

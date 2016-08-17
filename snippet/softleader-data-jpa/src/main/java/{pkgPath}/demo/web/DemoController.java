@@ -1,4 +1,4 @@
-package {pkg}.example.web;
+package {pkg}.demo.web;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import {pkg}.example.entity.Example;
-import {pkg}.example.service.ExampleService;
+import {pkg}.demo.entity.Demo;
+import {pkg}.demo.service.DemoService;
 
 /**
  * 相關文件: https://github.com/softleader/softleader-framework-docs/wiki/QueryPrompt
@@ -22,33 +22,33 @@ import {pkg}.example.service.ExampleService;
  *
  */
 @RestController
-@RequestMapping("/examples")
-public class ExampleController {
+@RequestMapping("/demos")
+public class DemoController {
 
   @Autowired
-  private ExampleService exampleService;
+  private DemoService demoService;
 
   @RequestMapping(method = {RequestMethod.POST})
-  public Example save(@RequestBody @Validated Example entity,
+  public Demo save(@RequestBody @Validated Demo entity,
       BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       // FIXME: 專案應該影自己的處理資料驗證失敗的邏輯
       throw new IllegalArgumentException(bindingResult.getFieldErrors().stream()
           .map(f -> f.getField() + ": " + f.getDefaultMessage()).collect(Collectors.joining(",")));
     }
-    return exampleService.save(entity);
+    return demoService.save(entity);
   }
 
   @RequestMapping(value = "/{id}", method = {RequestMethod.GET})
-  public Example getOne(@PathVariable("id") long id) {
-    return exampleService.getOne(id)
-        // FIXME: 專案應該影自己的撈不到資料的邏輯, 如: .orElseThrow(() -> new NotFoundException(Example.class, id));
+  public Demo getOne(@PathVariable("id") long id) {
+    return demoService.getOne(id)
+        // FIXME: 專案應該影自己的撈不到資料的邏輯, 如: .orElseThrow(() -> new NotFoundException(Demo.class, id));
         .orElse(null);
   }
 
   @RequestMapping(value = "/{ids}", method = {RequestMethod.DELETE, RequestMethod.POST})
   public void delete(@PathVariable("ids") List<Long> ids) {
-    exampleService.delete(ids);
+    demoService.delete(ids);
   }
 
 }

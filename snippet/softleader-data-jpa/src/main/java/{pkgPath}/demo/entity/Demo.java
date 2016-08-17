@@ -1,4 +1,4 @@
-package {pkg}.example.entity;
+package {pkg}.demo.entity;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -35,8 +35,8 @@ import tw.com.softleader.data.entity.GenericCodeEntity;
 @Table(name = "EXAMPLE")
 @AssertThat(
     value = "this.age > 0 && this.birthday != null && forName('java.time.Period').between(this.birthday, forName('java.time.LocalDate').now()).getYears() == this.age",
-    propertyNode = "age", message = "{example.birthday.and.age.not.match}")
-public class Example extends GenericCodeEntity<Long> {
+    propertyNode = "age", message = "{demo.birthday.and.age.not.match}")
+public class Demo extends GenericCodeEntity<Long> {
 
   @Min(0)
   @Max(130)
@@ -51,18 +51,18 @@ public class Example extends GenericCodeEntity<Long> {
   @Column(name = "email")
   private String email;
 
-  @JsonManagedReference("example_associations")
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "example")
-  private List<ExampleAssociation> associations;
+  @JsonManagedReference("demo_associations")
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "demo")
+  private List<DemoAssociation> associations;
 
-  public void addAssociation(ExampleAssociation entity) {
+  public void addAssociation(DemoAssociation entity) {
     if (this.associations == null) {
       throw new IllegalStateException(
           "If this is the first time inserting the entity, call setAssociations(List) first, otherwise you should select from database before updating the entity");
     }
     this.associations.add(entity);
-    if (entity.getExample() != this) {
-      entity.setExample(this);
+    if (entity.getDemo() != this) {
+      entity.setDemo(this);
     }
   }
 
