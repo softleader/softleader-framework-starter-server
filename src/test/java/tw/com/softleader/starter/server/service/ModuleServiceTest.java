@@ -30,7 +30,7 @@ import tw.com.softleader.starter.server.entity.Module;
 import tw.com.softleader.starter.server.pojo.Database;
 import tw.com.softleader.starter.server.pojo.Dependency;
 import tw.com.softleader.starter.server.pojo.ProjectDetails;
-import tw.com.softleader.starter.server.pojo.Starter;
+import tw.com.softleader.starter.server.pojo.Snippet;
 import tw.com.softleader.starter.server.pojo.Version;
 
 
@@ -41,14 +41,14 @@ import tw.com.softleader.starter.server.pojo.Version;
 @Transactional
 public class ModuleServiceTest {
 
-  Starter starter;
+  Snippet starter;
 
   @Autowired
   private ModuleService snippetService;
 
   @Before
   public void setUp() {
-    starter = new Starter();
+    starter = new Snippet();
     ProjectDetails project = new ProjectDetails();
     project.setName("starter-server-test");
     project.setPkg("tw.com.softleader.starter.server.test");

@@ -16,31 +16,37 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 import lombok.extern.slf4j.Slf4j;
 import tw.com.softleader.commons.compress.ArchiveStream;
-import tw.com.softleader.starter.server.pojo.Starter;
+import tw.com.softleader.starter.server.entity.Starter;
+import tw.com.softleader.starter.server.pojo.Snippet;
 import tw.com.softleader.starter.server.service.ModuleService;
+import tw.com.softleader.starter.server.service.StarterService;
 
 @Slf4j
 @RestController
-@RequestMapping("/app")
-public class AppController {
+@RequestMapping("/starter")
+public class StarterController {
 
   @Autowired
-  private ModuleService service;
+  private ModuleService moduleService;
+
+  @Autowired
+  private StarterService starterService;
+
+
+  @RequestMapping(method = RequestMethod.GET)
+  public Starter starter() {
+    return starterService.getAvailableOne();
+  }
 
   @RequestMapping(value = "/zip", method = RequestMethod.POST, consumes = "application/json",
       produces = "application/zip")
-  public void zip(@RequestBody @Validated Starter starter, HttpServletResponse response)
+  public void zip(@RequestBody @Validated Snippet snippet, HttpServletResponse response)
       throws IOException, ArchiveException {
-    if (log.isInfoEnabled()) {
-      ObjectMapper mapper = new ObjectMapper();
-      mapper.enable(SerializationFeature.INDENT_OUTPUT);
-      log.info("{}", mapper.writeValueAsString(starter));
-    }
-    Map<ZipArchiveEntry, InputStream> archives = service.collectSnippets(starter);
+    log.info("{}", new ObjectMapper().writeValueAsString(snippet));
+    Map<ZipArchiveEntry, InputStream> archives = moduleService.collectSnippets(snippet);
     ArchiveStream.of(response.getOutputStream()).compress(archives);
   }
 

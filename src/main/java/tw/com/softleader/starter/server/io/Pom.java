@@ -1,17 +1,18 @@
 package tw.com.softleader.starter.server.io;
 
 import java.util.Comparator;
+import java.util.Optional;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import tw.com.softleader.starter.server.pojo.Dependency;
-import tw.com.softleader.starter.server.pojo.Starter;
+import tw.com.softleader.starter.server.pojo.Snippet;
 
 @RequiredArgsConstructor
 public class Pom implements UnaryOperator<String> {
 
-  private final Starter starter;
+  private final Snippet starter;
 
   @Override
   public String apply(String source) {
@@ -19,7 +20,9 @@ public class Pom implements UnaryOperator<String> {
     source = source.replace("{groupId}", starter.getProject().getGroupId());
     source = source.replace("{artifactId}", starter.getProject().getArtifactId());
     source = source.replace("{version}", starter.getProject().getVersion());
-
+    source =
+        source.replace("{desc}", Optional.ofNullable(starter.getProject().getDesc()).orElse(""));
+    
     source = source.replace("{slVersion}", starter.getVersion().getSoftleaderFramework());
     source = source.replace("{ioVersion}", starter.getVersion().getSpringIoPlatform());
 

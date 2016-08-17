@@ -4,12 +4,12 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
-import tw.com.softleader.starter.server.pojo.Starter;
+import tw.com.softleader.starter.server.pojo.Snippet;
 
 @RequiredArgsConstructor
 public class WebApplicationInitializer implements UnaryOperator<String> {
 
-  private final Starter starter;
+  private final Snippet starter;
 
   @Override
   public String apply(String source) {

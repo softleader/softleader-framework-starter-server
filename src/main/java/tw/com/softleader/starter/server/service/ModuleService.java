@@ -39,7 +39,7 @@ import tw.com.softleader.starter.server.io.Datasource;
 import tw.com.softleader.starter.server.io.Pom;
 import tw.com.softleader.starter.server.io.SnippetSource;
 import tw.com.softleader.starter.server.io.WebApplicationInitializer;
-import tw.com.softleader.starter.server.pojo.Starter;
+import tw.com.softleader.starter.server.pojo.Snippet;
 
 @Slf4j
 @Service
@@ -48,12 +48,12 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
   @Autowired
   private ModuleDao dao;
 
-  public Map<ZipArchiveEntry, InputStream> collectSnippets(Starter starter)
+  public Map<ZipArchiveEntry, InputStream> collectSnippets(Snippet snippet)
       throws JsonProcessingException {
     List<Module> snippets = dao.findByArtifactIsNull();
     log.debug("Found {} global snippets", snippets.size());
 
-    Set<Module> selected = starter.getDependencies().stream()
+    Set<Module> selected = snippet.getDependencies().stream()
         .flatMap(d -> dao.findByArtifact(d.getGroupId() + ":" + d.getArtifactId()).stream())
         .filter(Tests.not(Objects::isNull)).collect(toSet());
 
@@ -70,7 +70,7 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
     snippets.addAll(selected);
     snippets.addAll(requires);
 
-    return new ArchiveEntries(starter, snippets).collect();
+    return new ArchiveEntries(snippet, snippets).collect();
   }
 
   @Override
@@ -80,11 +80,11 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
 
   static class ArchiveEntries {
 
-    private final Starter starter;
+    private final Snippet starter;
     private final Collection<Module> snippets;
     private final Function<String, String> formatter;
 
-    ArchiveEntries(Starter starter, Collection<Module> snippets) {
+    ArchiveEntries(Snippet starter, Collection<Module> snippets) {
       super();
       this.starter = requireNonNull(starter, "starter");
       this.snippets = requireNonNull(snippets, "snippets");

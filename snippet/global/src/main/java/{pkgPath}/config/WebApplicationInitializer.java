@@ -18,6 +18,11 @@ public class WebApplicationInitializer
   }
 
   @Override
+  protected Filter[] getServletFilters() {
+    return new Filter[] {servletFilters};
+  }
+  
+  @Override
   protected String[] getServletMappings() {
     return new String[] {"/"};
   }

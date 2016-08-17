@@ -26,6 +26,6 @@ public class DemoAssociation extends GenericEntity<Long> {
 
   @JsonBackReference("demo_associations")
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "EXAMPLE_ID")
+  @JoinColumn(name = "DEMO_ID")
   private Demo demo;
 }

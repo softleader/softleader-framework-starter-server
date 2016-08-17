@@ -5,6 +5,7 @@
     <groupId>{groupId}</groupId>
     <artifactId>{artifactId}</artifactId>
     <version>{version}</version>
+    <description>{desc}</description>
     <packaging>war</packaging>
 
     <name>{projectName}</name>

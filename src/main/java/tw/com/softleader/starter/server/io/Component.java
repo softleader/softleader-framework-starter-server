@@ -5,13 +5,13 @@ import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import tw.com.softleader.starter.server.pojo.Dependency;
-import tw.com.softleader.starter.server.pojo.Starter;
+import tw.com.softleader.starter.server.pojo.Snippet;
 import tw.com.softleader.util.StringUtils;
 
 @RequiredArgsConstructor
 public class Component implements UnaryOperator<String> {
 
-  private final Starter starter;
+  private final Snippet starter;
 
   @Override
   public String apply(String source) {

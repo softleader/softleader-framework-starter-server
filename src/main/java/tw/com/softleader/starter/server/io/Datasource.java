@@ -4,12 +4,12 @@ import java.util.Optional;
 import java.util.function.UnaryOperator;
 
 import lombok.RequiredArgsConstructor;
-import tw.com.softleader.starter.server.pojo.Starter;
+import tw.com.softleader.starter.server.pojo.Snippet;
 
 @RequiredArgsConstructor
 public class Datasource implements UnaryOperator<String> {
 
-  private final Starter starter;
+  private final Snippet starter;
 
   @Override
   public String apply(String source) {

@@ -30,6 +30,7 @@ public class ProjectDetails {
   private String artifactId;
   @NotEmpty
   private String version;
+  private String desc;
 
   public void collectGlobalInfo(Collection<Module> modules) {
     rootConfigs =

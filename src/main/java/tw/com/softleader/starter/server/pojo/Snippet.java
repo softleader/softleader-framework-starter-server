@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class Starter {
+public class Snippet {
 
   @NotNull
   private ProjectDetails project;

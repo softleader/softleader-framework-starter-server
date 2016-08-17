@@ -3,12 +3,12 @@ package tw.com.softleader.starter.server.io;
 import java.util.function.UnaryOperator;
 
 import lombok.RequiredArgsConstructor;
-import tw.com.softleader.starter.server.pojo.Starter;
+import tw.com.softleader.starter.server.pojo.Snippet;
 
 @RequiredArgsConstructor
 public class SnippetSource implements UnaryOperator<String> {
 
-  private final Starter starter;
+  private final Snippet starter;
 
   /**
    * 會取代以下 keyword: 1: {pj} 2. {pkg}, 3. {pkgPath}

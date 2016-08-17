@@ -36,7 +36,7 @@ public class WebMvcConfig extends WebMvcConfiguration {
 
   @Bean
   public JacksonObjectMapper jacksonObjectMapper(TranslateFromResourceBundle serializer) {
-    return new JacksonObjectMapper(new SimpleModule().addSerializer(Translatable.class,
+    return new StarterObjectMapper(new SimpleModule().addSerializer(Translatable.class,
         new TranslatableJsonSerializer(serializer, "value", "label")));
   }
 
