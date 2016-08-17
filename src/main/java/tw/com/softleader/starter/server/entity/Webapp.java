@@ -24,8 +24,8 @@ import tw.com.softleader.starter.server.enums.SwtStyle;
 @Setter
 @Getter
 @Entity
-@Table(name = "STARTER")
-public class Starter extends GenericEntity<Long> implements EntityJsonIgnore<Long> {
+@Table(name = "WEBAPP")
+public class Webapp extends GenericEntity<Long> implements EntityJsonIgnore<Long> {
 
   @Column(name = "revision")
   private long revision;
@@ -60,24 +60,24 @@ public class Starter extends GenericEntity<Long> implements EntityJsonIgnore<Lon
   private SwtStyle versionStyle;
 
   @JsonManagedReference("versions")
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "starter")
-  private Collection<StarterVersion> versions;
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "webapp")
+  private Collection<WebappVersion> versions;
 
-  public void addVersion(StarterVersion entity) {
+  public void addVersion(WebappVersion entity) {
     this.versions.add(entity);
-    if (entity.getStarter() != this) {
-      entity.setStarter(this);
+    if (entity.getWebapp() != this) {
+      entity.setWebapp(this);
     }
   }
 
   @JsonManagedReference("modules")
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "starter")
-  private Collection<StarterModule> modules;
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "webapp")
+  private Collection<WebappModule> modules;
 
-  public void addModule(StarterModule entity) {
+  public void addModule(WebappModule entity) {
     this.modules.add(entity);
-    if (entity.getStarter() != this) {
-      entity.setStarter(this);
+    if (entity.getWebapp() != this) {
+      entity.setWebapp(this);
     }
   }
 
@@ -93,13 +93,13 @@ public class Starter extends GenericEntity<Long> implements EntityJsonIgnore<Lon
   private SwtStyle databaseStyle;
 
   @JsonManagedReference("databases")
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "starter")
-  private Collection<StarterDatabase> databases;
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "webapp")
+  private Collection<WebappDatabase> databases;
 
-  public void addDatabase(StarterDatabase entity) {
+  public void addDatabase(WebappDatabase entity) {
     this.databases.add(entity);
-    if (entity.getStarter() != this) {
-      entity.setStarter(this);
+    if (entity.getWebapp() != this) {
+      entity.setWebapp(this);
     }
   }
 

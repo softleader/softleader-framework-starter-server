@@ -47,8 +47,8 @@ public class ModuleSnippetTest {
     module.setRootConfigs(Lists.newArrayList("DataSourceConfig.class"));
     module.setRemoveRootConfigs(
         Lists.newArrayList("tw.com.softleader.data.config.DataSourceConfiguration.class"));
-    module.setServletFilters(Lists.newArrayList(
-        "new org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter.OpenEntityManagerInViewFilter()"));
+    module.setServletFilters(Lists
+        .newArrayList("new org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter()"));
     module.setSnippets(Lists.newArrayList(
         "/Users/Matt/git/softleader-framework-starter-server/snippet/softleader-data-jpa"));
     dao.save(module);

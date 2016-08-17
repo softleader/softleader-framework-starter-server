@@ -27,13 +27,13 @@ import tw.com.softleader.starter.server.enums.SwtStyle;
 @Setter
 @Getter
 @Entity
-@Table(name = "STARTER_DEPENDENCY")
-public class StarterModule extends GenericEntity<Long> implements EntityJsonIgnore<Long> {
+@Table(name = "WEBAPP_DEPENDENCY")
+public class WebappModule extends GenericEntity<Long> implements EntityJsonIgnore<Long> {
 
   @JsonBackReference("modules")
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "STARTER_ID")
-  private Starter starter;
+  @JoinColumn(name = "WEBAPP_ID")
+  private Webapp webapp;
 
   @Column(name = "DEPENDENCY_TEXT")
   private String dependencyText;
@@ -48,9 +48,9 @@ public class StarterModule extends GenericEntity<Long> implements EntityJsonIgno
 
   @JsonManagedReference("modules")
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "module")
-  private Collection<StarterDependency> dependencies;
+  private Collection<WebappDependency> dependencies;
 
-  public void addDependency(StarterDependency entity) {
+  public void addDependency(WebappDependency entity) {
     this.dependencies.add(entity);
     if (entity.getModule() != this) {
       entity.setModule(this);

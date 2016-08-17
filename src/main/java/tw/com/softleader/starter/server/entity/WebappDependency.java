@@ -22,16 +22,16 @@ import tw.com.softleader.starter.server.enums.MvnScope;
 @Setter
 @Getter
 @Entity
-@Table(name = "STARTER_DEPENDENCY")
+@Table(name = "WEBAPP_DEPENDENCY")
 @NoArgsConstructor
-public class StarterDependency extends GenericEntity<Long> implements EntityJsonIgnore<Long> {
+public class WebappDependency extends GenericEntity<Long> implements EntityJsonIgnore<Long> {
 
   @JsonBackReference("dependencies")
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "MODULE_ID")
-  private StarterModule module;
+  private WebappModule module;
 
-  public StarterDependency(String groupId, String artifactId, String version, MvnScope scope,
+  public WebappDependency(String groupId, String artifactId, String version, MvnScope scope,
       boolean dft, boolean enabled) {
     super();
     this.groupId = groupId;

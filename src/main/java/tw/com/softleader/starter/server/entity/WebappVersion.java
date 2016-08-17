@@ -19,11 +19,11 @@ import tw.com.softleader.data.entity.GenericEntity;
 @Setter
 @Getter
 @Entity
-@Table(name = "STARTER_VERSION")
+@Table(name = "WEBAPP_VERSION")
 @NoArgsConstructor
-public class StarterVersion extends GenericEntity<Long> implements EntityJsonIgnore<Long> {
+public class WebappVersion extends GenericEntity<Long> implements EntityJsonIgnore<Long> {
 
-  public StarterVersion(String sl, String io, boolean dft, boolean enabled) {
+  public WebappVersion(String sl, String io, boolean dft, boolean enabled) {
     super();
     this.sl = sl;
     this.io = io;
@@ -33,8 +33,8 @@ public class StarterVersion extends GenericEntity<Long> implements EntityJsonIgn
 
   @JsonBackReference("versions")
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "STARTER_ID")
-  private Starter starter;
+  @JoinColumn(name = "WEBAPP_ID")
+  private Webapp webapp;
 
   @Column(name = "SL")
   private String sl;

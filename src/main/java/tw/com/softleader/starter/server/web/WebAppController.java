@@ -19,31 +19,31 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 import tw.com.softleader.commons.compress.ArchiveStream;
-import tw.com.softleader.starter.server.entity.Starter;
+import tw.com.softleader.starter.server.entity.Webapp;
 import tw.com.softleader.starter.server.pojo.Snippet;
 import tw.com.softleader.starter.server.service.ModuleService;
-import tw.com.softleader.starter.server.service.StarterService;
+import tw.com.softleader.starter.server.service.WebAppService;
 
 @Slf4j
 @RestController
-@RequestMapping("/starter")
-public class StarterController {
+@RequestMapping("/webapp")
+public class WebAppController {
 
   @Autowired
   private ModuleService moduleService;
 
   @Autowired
-  private StarterService starterService;
+  private WebAppService webAppService;
 
 
   @RequestMapping(method = RequestMethod.GET)
-  public Starter starter() {
-    return starterService.getAvailableOne();
+  public Webapp getWebApp() {
+    return webAppService.getAvailableOne();
   }
 
   @RequestMapping(value = "/zip", method = RequestMethod.POST, consumes = "application/json",
       produces = "application/zip")
-  public void zip(@RequestBody @Validated Snippet snippet, HttpServletResponse response)
+  public void getZip(@RequestBody @Validated Snippet snippet, HttpServletResponse response)
       throws IOException, ArchiveException {
     log.info("{}", new ObjectMapper().writeValueAsString(snippet));
     Map<ZipArchiveEntry, InputStream> archives = moduleService.collectSnippets(snippet);

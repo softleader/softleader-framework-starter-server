@@ -5,20 +5,20 @@ import org.springframework.stereotype.Service;
 
 import tw.com.softleader.data.dao.CrudDao;
 import tw.com.softleader.domain.AbstractCrudService;
-import tw.com.softleader.starter.server.dao.StarterDao;
-import tw.com.softleader.starter.server.entity.Starter;
+import tw.com.softleader.starter.server.dao.WebappDao;
+import tw.com.softleader.starter.server.entity.Webapp;
 
 @Service
-public class StarterService extends AbstractCrudService<Starter, Long> {
+public class WebAppService extends AbstractCrudService<Webapp, Long> {
 
   @Autowired
-  private StarterDao dao;
+  private WebappDao dao;
 
-  public CrudDao<Starter, Long> getDao() {
+  public CrudDao<Webapp, Long> getDao() {
     return dao;
   }
 
-  public Starter getAvailableOne() {
+  public Webapp getAvailableOne() {
     return dao.findTopByOrderByIdDesc();
   }
 
