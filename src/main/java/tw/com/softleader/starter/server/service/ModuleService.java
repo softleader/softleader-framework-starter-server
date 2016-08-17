@@ -97,6 +97,7 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
 
       starter.getProject().getDirs().stream().map(formatter).forEach(dir -> {
         String entryName = formatter.apply(dir + "/");
+        entryName = normalize(entryName);
         archives.put(new ZipArchiveEntry(entryName), null);
         log.debug("Added dir [{}] to zip", entryName);
       });
@@ -120,6 +121,7 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
         collectRecursive(archives, src, path);
       } else {
         String entryName = formatter.apply(path.getFileName().toString());
+        entryName = normalize(entryName);
         archives.put(new ZipArchiveEntry(entryName), readContent(path));
         log.debug("Added file [{}] to zip", entryName);
       }
@@ -133,11 +135,13 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
         } else {
           String entryName =
               formatter.apply(path.toAbsolutePath().toString().replace(root, "") + "/");
+          entryName = normalize(entryName);
           archives.put(new ZipArchiveEntry(entryName), null);
           log.debug("Added empty dir [{}] to zip", entryName);
         }
       } else {
         String entryName = formatter.apply(path.toAbsolutePath().toString().replace(root, ""));
+        entryName = normalize(entryName);
         archives.put(new ZipArchiveEntry(entryName), readContent(path));
         log.debug("Added file [{}] to zip", entryName);
       }
@@ -162,6 +166,11 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
         throw new RuntimeException("Reading [" + path.getFileName() + "] faild", e);
       }
     }
+
+    private String normalize(String entryName) {
+      return entryName.replaceAll("\\\\", "/");
+    }
+
   }
 
 }
