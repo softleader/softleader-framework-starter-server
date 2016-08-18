@@ -16,10 +16,8 @@ import {pkg}.demo.entity.Demo;
 import {pkg}.demo.service.DemoService;
 
 /**
- * 相關文件: https://github.com/softleader/softleader-framework-docs/wiki/QueryPrompt
- * 
  * @author Matt S.Y. Ho
- *
+ * @see https://github.com/softleader/softleader-framework-docs/wiki/QueryPrompt
  */
 @RestController
 @RequestMapping("/demos")
@@ -32,7 +30,7 @@ public class DemoController {
   public Demo save(@RequestBody @Validated Demo entity,
       BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
-      // FIXME: 專案應該影自己的處理資料驗證失敗的邏輯
+      // FIXME: Validation failure SHOULD be handled.
       throw new IllegalArgumentException(bindingResult.getFieldErrors().stream()
           .map(f -> f.getField() + ": " + f.getDefaultMessage()).collect(Collectors.joining(",")));
     }
@@ -42,7 +40,7 @@ public class DemoController {
   @RequestMapping(value = "/{id}", method = {RequestMethod.GET})
   public Demo getOne(@PathVariable("id") long id) {
     return demoService.getOne(id)
-        // FIXME: 專案應該影自己的撈不到資料的邏輯, 如: .orElseThrow(() -> new NotFoundException(Demo.class, id));
+        // FIXME: Always return null if value is not present may inappropriate, or you can try like '.orElseThrow(() -> new NotFoundException(Demo.class, id))';
         .orElse(null);
   }
 

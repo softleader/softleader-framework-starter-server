@@ -24,9 +24,8 @@ import tw.com.softleader.commons.validation.constraints.Latin;
 import tw.com.softleader.data.entity.GenericCodeEntity;
 
 /**
- * 相關文件: https://github.com/softleader/softleader-framework-docs/wiki/Bean-Validation
- * 
  * @author Matt S.Y. Ho
+ * @see https://github.com/softleader/softleader-framework-docs/wiki/Bean-Validation
  */
 @SuppressWarnings("serial")
 @Setter
@@ -69,7 +68,7 @@ public class Demo extends GenericCodeEntity<Long> {
   @NotNull
   @Latin
   @Override
-  public String getCode() { // 可以透過 override getter 對 super 的欄位加上驗證
+  public String getCode() { // You can add more JSR303 to getter that the column is defined in super class
     return super.getCode();
   }
 

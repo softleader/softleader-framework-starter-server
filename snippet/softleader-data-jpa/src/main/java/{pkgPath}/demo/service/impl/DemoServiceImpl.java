@@ -13,10 +13,8 @@ import {pkg}.demo.entity.Demo;
 import {pkg}.demo.service.DemoService;
 
 /**
- * 相關文件: https://github.com/softleader/softleader-framework-docs/wiki/Entity-Guarantee
- * 
  * @author Matt S.Y. Ho
- *
+ * @see https://github.com/softleader/softleader-framework-docs/wiki/Entity-Guarantee
  */
 @Service
 public class DemoServiceImpl extends AbstractCrudCodeService<Demo, Long>

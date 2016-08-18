@@ -36,7 +36,7 @@ public class DemoServiceTest {
   private DemoService demoService;
 
   /**
-   * insert測試
+   * normal insert
    */
   @Test
   public void testInsert() throws Exception {
@@ -56,7 +56,7 @@ public class DemoServiceTest {
   }
 
   /**
-   * 重複insert code相同的資料, 應該要丟出 {@link AlreadyExistException}
+   * insert duplicate code, expected {@link AlreadyExistException}
    */
   @Transactional(TxType.NOT_SUPPORTED)
   @Test(expected = AlreadyExistException.class)
@@ -73,7 +73,8 @@ public class DemoServiceTest {
   }
 
   /**
-   * 更新時 modifiedTime 小於資料庫時, 應該要丟出 {@link OutOfDateException}
+   * If input's modifiedTime less than database's modifiedTime, an {@link OutOfDateException} should
+   * be thrown
    */
   @Transactional(TxType.NOT_SUPPORTED)
   @Test(expected = OutOfDateException.class)
@@ -89,7 +90,7 @@ public class DemoServiceTest {
   }
 
   /**
-   * JSR-303驗證測試: 輸入的生日跟系統日計算後應該等於年齡欄位
+   * JSR-303 validation: the period between now and birthday should equals to age
    */
   @Test(expected = ConstraintViolationException.class)
   public void testAgeAndBirthdayViolation() {
@@ -101,15 +102,15 @@ public class DemoServiceTest {
     try {
       demoService.save(entity);
     } catch (final ConstraintViolationException ex) {
-      Assert.assertEquals(1, ex.getConstraintViolations().size()); // 預期1筆錯誤
+      Assert.assertEquals(1, ex.getConstraintViolations().size()); // expected only 1 error
       Assert.assertFalse(
-          ex.getConstraintViolations().iterator().next().getMessage().startsWith("demo.")); // 預期錯誤要被翻譯過
+          ex.getConstraintViolations().iterator().next().getMessage().startsWith("demo.")); // the error message should be translated
       throw ex;
     }
   }
 
   /**
-   * 一對多欄位測試
+   * One to many
    */
   @Test
   public void testAssociations() throws Exception {

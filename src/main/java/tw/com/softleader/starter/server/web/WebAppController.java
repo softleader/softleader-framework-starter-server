@@ -37,7 +37,7 @@ public class WebappController {
 
 
   @RequestMapping(method = RequestMethod.GET)
-  public Webapp getWebApp() {
+  public Webapp getWebapp() {
     return webAppService.getAvailableOne();
   }
 
