@@ -68,7 +68,7 @@ public class Demo extends GenericCodeEntity<Long> {
   @NotNull
   @Latin
   @Override
-  public String getCode() { // You can add more JSR303 to getter that the column is defined in super class
+  public String getCode() { // You can add more JSR303 on GETTER to the fields defined in super class
     return super.getCode();
   }
 
