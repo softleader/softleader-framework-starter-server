@@ -41,15 +41,25 @@ public class DataSourceConfig extends DataSourceConfiguration {
   public CurrentUsernameSupplier currentUsernameSupplier() {
     return new CurrentUsernameSupplier();
   }
-  
-  @Bean
-  public DataSourceDefinitions dataSourceDefinitions() {
+
+  @Bean(destroyMethod = "close")
+  public BoneCPDataSource boneCPDataSource() {
     BoneCPDataSource ds = new BoneCPDataSource();
     ds.setDriverClass(DATASOURCE_PROPS.getProperty(DatabaseDefinition.DRIVER_CLASS));
     ds.setJdbcUrl(DATASOURCE_PROPS.getProperty(DatabaseDefinition.URL));
     ds.setUsername(DATASOURCE_PROPS.getProperty(DatabaseDefinition.USERNAME));
     ds.setPassword(DATASOURCE_PROPS.getProperty(DatabaseDefinition.PASSWORD));
+    ds.setIdleConnectionTestPeriodInMinutes(10);
+    ds.setIdleMaxAgeInMinutes(60);
+    ds.setMaxConnectionsPerPartition(10);
+    ds.setMinConnectionsPerPartition(0);
+    ds.setPartitionCount(3);
+    ds.setStatementsCacheSize(100);
+    return ds;
+  }
 
+  @Bean
+  public DataSourceDefinitions dataSourceDefinitions(BoneCPDataSource ds) {
     DataSourceDefinitions definitions = new DataSourceDefinitions();
     definitions.setTargetDataSource(DataSourceDefinitions.TYPE.DEFAULT.name(), ds);
     return definitions;
