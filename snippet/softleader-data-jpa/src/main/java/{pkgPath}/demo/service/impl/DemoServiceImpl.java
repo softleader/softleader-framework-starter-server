@@ -13,7 +13,6 @@ import {pkg}.demo.entity.Demo;
 import {pkg}.demo.service.DemoService;
 
 /**
- * @author Matt S.Y. Ho
  * @see https://github.com/softleader/softleader-framework-docs/wiki/Entity-Guarantee
  */
 @Service

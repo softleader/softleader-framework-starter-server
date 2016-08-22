@@ -13,6 +13,9 @@ import tw.com.softleader.data.dao.GenericCrudDaoImpl;
 import tw.com.softleader.data.entity.EntityPersistenceCallbackSupplier;
 import tw.com.softleader.security.supplier.CurrentUsernameSupplier;
 
+/**
+ * @see https://github.com/softleader/softleader-framework-docs/wiki/JPA-Datasource-Setup 
+ */
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(

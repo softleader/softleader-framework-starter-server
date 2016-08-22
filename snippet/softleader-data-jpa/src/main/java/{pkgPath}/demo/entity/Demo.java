@@ -24,7 +24,6 @@ import tw.com.softleader.commons.validation.constraints.Latin;
 import tw.com.softleader.data.entity.GenericCodeEntity;
 
 /**
- * @author Matt S.Y. Ho
  * @see https://github.com/softleader/softleader-framework-docs/wiki/Bean-Validation
  */
 @SuppressWarnings("serial")

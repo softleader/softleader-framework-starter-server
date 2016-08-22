@@ -13,7 +13,6 @@ import lombok.Setter;
 import tw.com.softleader.data.entity.GenericEntity;
 
 /**
- * @author Matt S.Y. Ho
  * @see https://github.com/softleader/softleader-framework-docs/wiki/Bean-Validation
  */
 @SuppressWarnings("serial")
