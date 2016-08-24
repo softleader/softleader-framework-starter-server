@@ -62,12 +62,6 @@
 			<groupId>tw.com.softleader</groupId>
 			<artifactId>softleader-data</artifactId>
 			<version>${softleader-framework.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>c3p0</groupId>
-					<artifactId>c3p0</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>tw.com.softleader</groupId>
@@ -120,6 +114,11 @@
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		
+		<dependency>
+	        <groupId>com.zaxxer</groupId>
+	        <artifactId>HikariCP</artifactId>
+	    </dependency>
     </dependencies>
 
     <build>
