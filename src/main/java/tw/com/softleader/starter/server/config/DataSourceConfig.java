@@ -48,8 +48,7 @@ public class DataSourceConfig extends DataSourceConfiguration {
     ds.setJdbcUrl(DATASOURCE_PROPS.getProperty(DatabaseDefinition.URL));
     ds.setUsername(DATASOURCE_PROPS.getProperty(DatabaseDefinition.USERNAME));
     ds.setPassword(DATASOURCE_PROPS.getProperty(DatabaseDefinition.PASSWORD));
-    DATASOURCE_PROPS.tryProperty(DatabaseDefinition.CONNECTION_TEST_QUERY)
-        .ifPresent(ds::setConnectionTestQuery);
+    DATASOURCE_PROPS.tryProperty("dataSource.connectionTestQuery").ifPresent(ds::setConnectionTestQuery);
     return ds;
   }
 
