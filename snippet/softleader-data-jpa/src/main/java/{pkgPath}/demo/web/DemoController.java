@@ -74,7 +74,7 @@ public class DemoController {
             throw Unchecked.rethrow(e);
           }
         } else {
-          throw new IllegalArgumentException(StringUtils .format("Failued to upload [{}] because it was empty", file.getOriginalFilename()));
+          throw new IllegalArgumentException(StringUtils.format("Failued to upload [{}] because it was empty", file.getOriginalFilename()));
         }
       });
     } else {
