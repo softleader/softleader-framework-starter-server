@@ -7,12 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.jolbox.bonecp.BoneCPDataSource;
-
 import tw.com.softleader.commons.collect.Lists;
 import tw.com.softleader.data.config.DataSourceConfiguration;
-import tw.com.softleader.data.config.DataSourceDefinitions;
-import tw.com.softleader.data.config.DatabaseDefinition;
 import tw.com.softleader.data.dao.GenericCrudDaoImpl;
 import tw.com.softleader.data.entity.EntityPersistenceCallbackSupplier;
 import tw.com.softleader.security.supplier.CurrentUsernameSupplier;
@@ -41,26 +37,4 @@ public class DataSourceConfig extends DataSourceConfiguration {
     return new CurrentUsernameSupplier();
   }
 
-  @Bean(destroyMethod = "close")
-  public BoneCPDataSource boneCPDataSource() {
-    BoneCPDataSource ds = new BoneCPDataSource();
-    ds.setDriverClass(DATASOURCE_PROPS.getProperty(DatabaseDefinition.DRIVER_CLASS));
-    ds.setJdbcUrl(DATASOURCE_PROPS.getProperty(DatabaseDefinition.URL));
-    ds.setUsername(DATASOURCE_PROPS.getProperty(DatabaseDefinition.USERNAME));
-    ds.setPassword(DATASOURCE_PROPS.getProperty(DatabaseDefinition.PASSWORD));
-    ds.setIdleConnectionTestPeriodInMinutes(10);
-    ds.setIdleMaxAgeInMinutes(60);
-    ds.setMaxConnectionsPerPartition(10);
-    ds.setMinConnectionsPerPartition(0);
-    ds.setPartitionCount(3);
-    ds.setStatementsCacheSize(100);
-    return ds;
-  }
-
-  @Bean
-  public DataSourceDefinitions dataSourceDefinitions(BoneCPDataSource ds) {
-    DataSourceDefinitions definitions = new DataSourceDefinitions();
-    definitions.setTargetDataSource(DataSourceDefinitions.TYPE.DEFAULT.name(), ds);
-    return definitions;
-  }
 }
