@@ -1,9 +1,11 @@
 package {pkg}.demo.web;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -14,6 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -81,6 +84,13 @@ public class DemoControllerTest {
     respone = mvc.perform(get("/demos/" + actual.getId())).andExpect(status().isOk()).andReturn()
         .getResponse().getContentAsString();
     Assert.assertEquals("", respone);
+  }
+  
+  @Test
+  public void testFileUpload() throws Exception {
+    MockMultipartFile file =
+        new MockMultipartFile("files", "filename.txt", "text/plain", "some text".getBytes());
+    mvc.perform(fileUpload("/demos/upload").file(file)).andExpect(redirectedUrl("/"));
   }
 
 }
