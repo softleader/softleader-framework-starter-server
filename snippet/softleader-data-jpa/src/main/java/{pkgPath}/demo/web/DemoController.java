@@ -63,7 +63,7 @@ public class DemoController {
   }
   
   @RequestMapping(method = RequestMethod.POST, value = "/upload")
-  public String handleFileUpload(@RequestParam("files") List<MultipartFile> files) {
+  public String fileUpload(@RequestParam("files") List<MultipartFile> files) {
 
     if (!files.isEmpty()) {
       files.forEach(file -> {
