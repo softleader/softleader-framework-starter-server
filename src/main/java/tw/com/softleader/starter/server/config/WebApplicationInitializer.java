@@ -11,8 +11,7 @@ public class WebApplicationInitializer
   @Override
   protected Class<?>[] getRootConfigClasses() {
     return new Class<?>[] {DataSourceConfig.class,
-        tw.com.softleader.domain.config.DefaultDomainConfiguration.class, ServiceConfig.class,
-        MongoConfig.class};
+        tw.com.softleader.domain.config.DefaultDomainConfiguration.class, ServiceConfig.class};
   }
 
   @Override

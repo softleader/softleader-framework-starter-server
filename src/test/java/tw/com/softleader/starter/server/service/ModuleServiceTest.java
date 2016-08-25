@@ -94,11 +94,11 @@ public class ModuleServiceTest {
     s.setDirs(Lists.newArrayList("src/main/java/{pkgPath}/security/service",
         "src/main/java/{pkgPath}/index/web", "src/main/resources", "src/main/webapp/WEB-INF/pages",
         "src/test/java/{pkgPath}", "src/test/resources"));
-    s.setSnippets(Lists.newArrayList());
+    s.setSources(Lists.newArrayList());
     snippets.add(s);
 
     Map<ZipArchiveEntry, InputStream> archives =
-        new ModuleService.ArchiveEntries(starter, snippets).collect();
+        new ModuleService().new ArchiveEntries(starter, snippets).collect();
     File zip = new File("/Users/Matt/temp/test.zip");
     ArchiveStream.of(new FileOutputStream(zip)).compress(archives);
     System.out.println(zip.getPath() + " created!");

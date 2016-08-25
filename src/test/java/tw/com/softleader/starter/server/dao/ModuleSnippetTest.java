@@ -15,6 +15,7 @@ import tw.com.softleader.domain.config.DefaultDomainConfiguration;
 import tw.com.softleader.starter.server.config.DataSourceConfig;
 import tw.com.softleader.starter.server.config.ServiceConfig;
 import tw.com.softleader.starter.server.entity.Module;
+import tw.com.softleader.starter.server.entity.Source;
 
 @WithMockUser("matt")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -33,39 +34,49 @@ public class ModuleSnippetTest {
   }
 
   @Test
-  public void testGlobalmodule() {
+  public void testGlobalModule() {
     Module module = new Module();
-    module.setSnippets(
-        Lists.newArrayList("/Users/Matt/git/softleader-framework-starter-server/snippet/global"));
+    module.setSources(Lists.newArrayList());
+    module.addSource(new Source("/global"));
     dao.save(module);
   }
 
   @Test
-  public void testJpamodule() {
+  public void testDataModule() {
+    Module module = new Module();
+    module.setArtifact("tw.com.softleader:softleader-data");
+    module.setSources(Lists.newArrayList());
+    module.addSource(new Source("/softleader-data"));
+    dao.save(module);
+  }
+
+  @Test
+  public void testJpaModule() {
     Module module = new Module();
     module.setArtifact("tw.com.softleader:softleader-data-jpa");
+    module.setRequires(Lists.newArrayList("tw.com.softleader:softleader-data"));
     module.setRootConfigs(Lists.newArrayList("DataSourceConfig.class"));
     module.setRemoveRootConfigs(
         Lists.newArrayList("tw.com.softleader.data.config.DataSourceConfiguration.class"));
     module.setServletFilters(Lists
         .newArrayList("new org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter()"));
-    module.setSnippets(Lists.newArrayList(
-        "/Users/Matt/git/softleader-framework-starter-server/snippet/softleader-data-jpa"));
+    module.setSources(Lists.newArrayList());
+    module.addSource(new Source("/softleader-data-jpa"));
     dao.save(module);
   }
 
   @Test
-  public void testDomainSchedulingmodule() {
+  public void testDomainSchedulingModule() {
     Module module = new Module();
     module.setArtifact("tw.com.softleader:softleader-domain-scheduling");
     module.setRootConfigs(Lists.newArrayList("SchedulingConfig.class"));
-    module.setSnippets(Lists.newArrayList(
-        "/Users/Matt/git/softleader-framework-starter-server/snippet/softleader-domain-scheduling"));
+    module.setSources(Lists.newArrayList());
+    module.addSource(new Source("/softleader-domain-scheduling"));
     dao.save(module);
   }
 
   @Test
-  public void testDomainRulemodule() {
+  public void testDomainRuleModule() {
     Module module = new Module();
     module.setArtifact("tw.com.softleader:softleader-domain-rule");
     module.setRootConfigs(
@@ -79,8 +90,8 @@ public class ModuleSnippetTest {
     module.setArtifact("tw.com.softleader:softleader-web-mvc");
     module.setRequires(Lists.newArrayList("tw.com.softleader:softleader-web-mvc"));
     module.setRootConfigs(Lists.newArrayList("WebSecurityConfig.class"));
-    module.setSnippets(Lists.newArrayList(
-        "/Users/Matt/git/softleader-framework-starter-server/snippet/softleader-security"));
+    module.setSources(Lists.newArrayList());
+    module.addSource(new Source("/softleader-security"));
     dao.save(module);
   }
 
@@ -93,8 +104,8 @@ public class ModuleSnippetTest {
             "tw.com.softleader.domain.config.DefaultDomainConfiguration.class",
             "WebSecurityConfig.class", "ServiceConfig.class"));
     module.setServletConfigs(Lists.newArrayList("WebMvcConfig.class"));
-    module.setSnippets(Lists.newArrayList(
-        "/Users/Matt/git/softleader-framework-starter-server/snippet/softleader-web-mvc"));
+    module.setSources(Lists.newArrayList());
+    module.addSource(new Source("/softleader-web-mvc"));
     dao.save(module);
   }
 

@@ -2,10 +2,15 @@ package tw.com.softleader.starter.server.entity;
 
 import java.util.Collection;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -54,8 +59,14 @@ public class Module extends GenericEntity<Long> {
   @Convert(converter = StringJoiningConverter.class)
   private Collection<String> dirs;
 
-  @Column(name = "SNIPPETS", length = 4000)
-  @Convert(converter = StringJoiningConverter.class)
-  private Collection<String> snippets; // 可以是一個目錄或一個檔案
+  @JsonManagedReference("sources")
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "module")
+  private Collection<Source> sources;
 
+  public void addSource(Source entity) {
+    this.sources.add(entity);
+    if (entity.getModule() != this) {
+      entity.setModule(this);
+    }
+  }
 }

@@ -24,6 +24,7 @@ import java.util.function.Function;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -35,6 +36,7 @@ import tw.com.softleader.data.dao.CrudDao;
 import tw.com.softleader.domain.AbstractCrudService;
 import tw.com.softleader.starter.server.dao.ModuleDao;
 import tw.com.softleader.starter.server.entity.Module;
+import tw.com.softleader.starter.server.entity.Source;
 import tw.com.softleader.starter.server.io.Component;
 import tw.com.softleader.starter.server.io.Datasource;
 import tw.com.softleader.starter.server.io.Pom;
@@ -45,6 +47,9 @@ import tw.com.softleader.starter.server.pojo.Snippet;
 @Slf4j
 @Service
 public class ModuleService extends AbstractCrudService<Module, Long> {
+
+  @Value("${source.root}")
+  private String sourceRoot;
 
   @Autowired
   private ModuleDao dao;
@@ -79,7 +84,7 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
     return dao;
   }
 
-  static class ArchiveEntries {
+  class ArchiveEntries {
 
     private final Snippet starter;
     private final Collection<Module> snippets;
@@ -103,25 +108,29 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
         log.debug("Added dir [{}] to zip", entryName);
       });
 
-      snippets.stream().map(Module::getSnippets).flatMap(Collection::stream)
-          .forEach(Unchecked.accept(src -> collect(archives, src)));
+      snippets.stream().map(Module::getSources).flatMap(Collection::stream).map(src -> {
+        src.setRoot(sourceRoot);
+        return src;
+      }).forEach(Unchecked.accept(src -> collect(archives, src)));
 
       return archives;
     }
 
-    private void collect(Map<ZipArchiveEntry, InputStream> archives, String src)
+    private void collect(Map<ZipArchiveEntry, InputStream> archives, Source src)
         throws IOException, ClassNotFoundException, URISyntaxException {
-      Path path = Paths.get(src);
+      Path path = Paths.get(src.getFullPath());
       if (Files.notExists(path)) {
-        throw new NoSuchFileException("[" + src + "] is not a exist path");
+        throw new NoSuchFileException("[" + src.getFullPath() + "] is not a exist path");
       }
       if (!Files.isReadable(path)) {
-        throw new IllegalStateException("[" + src + "] is not a readable path");
+        throw new IllegalStateException("[" + src.getFullPath() + "] is not a readable path");
       }
       if (Files.isDirectory(path)) {
-        collectRecursive(archives, src, path);
+        collectRecursive(archives, src.getFullPath(), path);
       } else {
-        String entryName = formatter.apply(path.getFileName().toString());
+        String entryName = formatter
+            .apply(requireNonNull(src.getEntryName(), "Source [" + src.getModule().getArtifact()
+                + "] - [" + src.getPath() + "] did not determine entryName"));
         entryName = FilenameUtils.normalize(entryName, true);
         archives.put(new ZipArchiveEntry(entryName), readContent(path));
         log.debug("Added file [{}] to zip", entryName);

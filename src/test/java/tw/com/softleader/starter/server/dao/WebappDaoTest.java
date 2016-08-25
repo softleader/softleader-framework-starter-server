@@ -42,9 +42,9 @@ public class WebappDaoTest {
   public void testInsert() {
     Webapp webapp = new Webapp();
 
-    webapp.setRevision(System.currentTimeMillis());
-    webapp.setBaseUrl(
-        "https://raw.githubusercontent.com/softleader/softleader-framework-starter/master/resources");
+    // webapp.setRevision(System.currentTimeMillis());
+    webapp.setRevision(1471418080640L);
+    webapp.setBaseUrl("http://118.163.91.249/starter/webapp/zip");
 
     webapp.setProjectArtifactId("softleader-");
     webapp.setProjectDesc("SoftLeader project for ");
@@ -85,8 +85,8 @@ public class WebappDaoTest {
         new WebappDependency("tw.com.softleader", "softleader-web-mvc", null, null, true, false));
     module.addDependency(
         new WebappDependency("tw.com.softleader", "softleader-security", null, null, true, false));
-    module.addDependency(new WebappDependency("tw.com.softleader", "softleader-resources", null,
-        null, false, true));
+    module.addDependency(
+        new WebappDependency("tw.com.softleader", "softleader-resources", null, null, false, true));
 
     webapp.addModule(module = new WebappModule());
     module.setDependencyText("Domain");
@@ -99,8 +99,8 @@ public class WebappDaoTest {
         null, null, false, true));
     module.addDependency(new WebappDependency("tw.com.softleader", "softleader-domain-scheduling",
         null, null, false, true));
-    module.addDependency(new WebappDependency("tw.com.softleader", "softleader-report-jasper",
-        null, null, false, true));
+    module.addDependency(new WebappDependency("tw.com.softleader", "softleader-report-jasper", null,
+        null, false, true));
     module.addDependency(new WebappDependency("tw.com.softleader", "softleader-domain-bpm", null,
         null, false, false));
 
