@@ -42,9 +42,9 @@ public class WebappDaoTest {
   public void testInsert() {
     Webapp webapp = new Webapp();
 
-    // webapp.setRevision(System.currentTimeMillis());
-    webapp.setRevision(1471418080640L);
-    webapp.setBaseUrl("http://118.163.91.249/starter/webapp/zip");
+//    webapp.setRevision(System.currentTimeMillis());
+     webapp.setRevision(1472229428800L);
+    webapp.setBaseUrl("/zip");
 
     webapp.setProjectArtifactId("softleader-");
     webapp.setProjectDesc("SoftLeader project for ");
@@ -143,6 +143,8 @@ public class WebappDaoTest {
         false, true, "jdbc:h2://<server>:<9092>/<db-name>"));
 
     dao.save(webapp);
+
+    System.out.println("Current revision is [" + webapp.getRevision() + "]");
   }
 
   @Test
