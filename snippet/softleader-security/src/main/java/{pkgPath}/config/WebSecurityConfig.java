@@ -4,11 +4,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
-
-import {pkg}.security.service.UserDetailsService;
 import tw.com.softleader.security.authentication.MoreDetailsBinder;
 import tw.com.softleader.security.authentication.MoreUserDetailsService;
 import tw.com.softleader.security.config.MoreWebSecurityConfiguration;
+import {pkg}.security.service.UserDetailsService;
+
+import tw.com.softleader.security.supplier.CurrentUsernameSupplier;
 
 @Configuration
 @EnableWebSecurity
@@ -29,4 +30,8 @@ public class WebSecurityConfig extends MoreWebSecurityConfiguration {
     return new UserDetailsService();
   }
 
+  @Bean
+  public CurrentUsernameSupplier currentUsernameSupplier() {
+    return new CurrentUsernameSupplier();
+  }
 }

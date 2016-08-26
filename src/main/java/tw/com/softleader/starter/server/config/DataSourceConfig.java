@@ -2,6 +2,7 @@ package tw.com.softleader.starter.server.config;
 
 import java.util.Collection;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -30,15 +31,13 @@ public class DataSourceConfig extends DataSourceConfiguration {
     return Lists.newArrayList("tw.com.softleader.starter.server.**.entity");
   }
 
+  @Autowired
+  private CurrentUsernameSupplier currentUsernameSupplier;
+  
   @Override
   @Bean
   public EntityPersistenceCallbackSupplier entityPersistenceSupport() {
-    return new EntityPersistenceCallbackSupplier(currentUsernameSupplier());
-  }
-
-  @Bean
-  public CurrentUsernameSupplier currentUsernameSupplier() {
-    return new CurrentUsernameSupplier();
+    return new EntityPersistenceCallbackSupplier(currentUsernameSupplier);
   }
 
   @Bean(destroyMethod = "close")

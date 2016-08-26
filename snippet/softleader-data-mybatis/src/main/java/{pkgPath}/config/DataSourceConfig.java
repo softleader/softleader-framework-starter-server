@@ -3,6 +3,7 @@ package {pkg}.config;
 import java.util.Collection;
 
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Repository;
@@ -23,15 +24,13 @@ public class DataSourceConfig extends DataSourceConfiguration {
     return Lists.newArrayList("{pkg}.demo.entity");
   }
 
+  @Autowired
+  private CurrentUsernameSupplier currentUsernameSupplier;
+
   @Override
   @Bean
   public EntityPersistenceCallbackSupplier entityPersistenceSupport() {
-    return new EntityPersistenceCallbackSupplier(currentUsernameSupplier());
-  }
-
-  @Bean
-  public CurrentUsernameSupplier currentUsernameSupplier() {
-    return new CurrentUsernameSupplier();
+    return new EntityPersistenceCallbackSupplier(currentUsernameSupplier);
   }
 
   @Bean

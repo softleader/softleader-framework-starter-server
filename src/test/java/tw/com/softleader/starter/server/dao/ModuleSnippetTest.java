@@ -100,7 +100,7 @@ public class ModuleSnippetTest {
   @Test
   public void testSecurity() {
     Module module = new Module();
-    module.setArtifact("tw.com.softleader:softleader-web-mvc");
+    module.setArtifact("tw.com.softleader:softleader-security");
     module.setRequires(Lists.newArrayList("tw.com.softleader:softleader-web-mvc"));
     module.setRootConfigs(Lists.newArrayList("WebSecurityConfig.class"));
     module.setSources(Lists.newArrayList());
