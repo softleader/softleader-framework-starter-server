@@ -1,12 +1,10 @@
-package {pkg}.demo.service;
+package {pkg}demo.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-import javax.transaction.Transactional;
-import javax.transaction.Transactional.TxType;
 import javax.validation.ConstraintViolationException;
 
 import org.junit.Assert;
@@ -16,20 +14,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import {pkg}.config.DataSourceConfig;
-import {pkg}.config.ServiceConfig;
-import {pkg}.demo.entity.DemoAssociation;
-import {pkg}.demo.entity.Demo;
+import lombok.extern.slf4j.Slf4j;
+import {pkg}config.DataSourceConfig;
+import {pkg}config.ServiceConfig;
+import {pkg}demo.entity.Demo;
+import {pkg}demo.entity.DemoAssociation;
 import tw.com.softleader.domain.config.DefaultDomainConfiguration;
 import tw.com.softleader.domain.exception.AlreadyExistException;
 import tw.com.softleader.domain.exception.OutOfDateException;
 
+/**
+ * EXECUTE demo.sql BEFORE YOU RUN THIS TEST!
+ */
 @WithMockUser("demo")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(
     classes = {ServiceConfig.class, DataSourceConfig.class, DefaultDomainConfiguration.class})
 @Transactional
+@Slf4j
 public class DemoServiceTest {
 
   @Autowired
@@ -58,7 +63,7 @@ public class DemoServiceTest {
   /**
    * insert duplicate code, expected {@link AlreadyExistException}
    */
-  @Transactional(TxType.NOT_SUPPORTED)
+  @Transactional(propagation = Propagation.NOT_SUPPORTED)
   @Test(expected = AlreadyExistException.class)
   public void testDuplicateSave() {
     final Demo entity = new Demo();
@@ -76,7 +81,7 @@ public class DemoServiceTest {
    * If input's modifiedTime less than database's modifiedTime, an {@link OutOfDateException} should
    * be thrown
    */
-  @Transactional(TxType.NOT_SUPPORTED)
+  @Transactional(propagation = Propagation.NOT_SUPPORTED)
   @Test(expected = OutOfDateException.class)
   public void testOutOfDateSave() {
     Demo entity = new Demo();
@@ -102,9 +107,11 @@ public class DemoServiceTest {
     try {
       demoService.save(entity);
     } catch (final ConstraintViolationException ex) {
-      Assert.assertEquals(1, ex.getConstraintViolations().size()); // expected only 1 error
+      // expected only 1 error
+      Assert.assertEquals(1, ex.getConstraintViolations().size());
+      // the error message should be translated
       Assert.assertFalse(
-          ex.getConstraintViolations().iterator().next().getMessage().startsWith("demo.")); // the error message should be translated
+          ex.getConstraintViolations().iterator().next().getMessage().startsWith("demo."));
       throw ex;
     }
   }
@@ -114,22 +121,27 @@ public class DemoServiceTest {
    */
   @Test
   public void testAssociations() throws Exception {
-    final Demo entity = new Demo();
-    entity.setCode(UUID.randomUUID().toString().replace("-", "").substring(0, 10));
-    entity.setAge(10);
-    entity.setBirthday(LocalDate.now().minusYears(entity.getAge()));
-    entity.setAssociations(new ArrayList<>());
-    final int associationSize = 2;
-    IntStream.range(0, associationSize).forEach(i -> {
-      entity.addAssociation(new DemoAssociation());
-    });
-    final Demo saved = demoService.save(entity);
-    Assert.assertNotNull(saved.getAssociations());
-    Assert.assertEquals(associationSize, saved.getAssociations().size());
-    saved.getAssociations().forEach(a -> {
-      Assert.assertNotNull(a.getId());
-      Assert.assertNotNull(a.getDemo());
-    });
+    try {
+      final Demo entity = new Demo();
+      entity.setCode(UUID.randomUUID().toString().replace("-", "").substring(0, 10));
+      entity.setAge(10);
+      entity.setBirthday(LocalDate.now().minusYears(entity.getAge()));
+      entity.setAssociations(new ArrayList<>());
+      final int associationSize = 2;
+      IntStream.range(0, associationSize).forEach(i -> {
+        entity.getAssociations().add(new DemoAssociation());
+      });
+      final Demo saved = demoService.save(entity);
+      Assert.assertNotNull(saved.getAssociations());
+      Assert.assertEquals(associationSize, saved.getAssociations().size());
+      saved.getAssociations().forEach(a -> {
+        Assert.assertNotNull(a.getId());
+        Assert.assertNotNull(a.getDemoId());
+      });
+    } catch (Exception e) {
+      log.error("", e);
+      throw e;
+    }
   }
 
 }

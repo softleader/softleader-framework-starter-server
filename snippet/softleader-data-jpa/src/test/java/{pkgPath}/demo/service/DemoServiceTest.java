@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-import javax.transaction.Transactional;
-import javax.transaction.Transactional.TxType;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import javax.validation.ConstraintViolationException;
 
 import org.junit.Assert;
@@ -58,7 +58,7 @@ public class DemoServiceTest {
   /**
    * insert duplicate code, expected {@link AlreadyExistException}
    */
-  @Transactional(TxType.NOT_SUPPORTED)
+  @Transactional(propagation = Propagation.NOT_SUPPORTED)
   @Test(expected = AlreadyExistException.class)
   public void testDuplicateSave() {
     final Demo entity = new Demo();
@@ -76,7 +76,7 @@ public class DemoServiceTest {
    * If input's modifiedTime less than database's modifiedTime, an {@link OutOfDateException} should
    * be thrown
    */
-  @Transactional(TxType.NOT_SUPPORTED)
+  @Transactional(propagation = Propagation.NOT_SUPPORTED)
   @Test(expected = OutOfDateException.class)
   public void testOutOfDateSave() {
     Demo entity = new Demo();

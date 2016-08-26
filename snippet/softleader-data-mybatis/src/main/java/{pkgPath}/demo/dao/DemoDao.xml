@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="{pkg}.demo.dao.DemoDao">
+	
+	<sql id="conditionSql">
+		<where>
+			<if test="code != null and code != ''">
+				AND code = #{code}
+			</if>
+			<if test="localName != null and localName != ''">
+				AND local_Name like concat('%',#{localName},'%')
+			</if>
+			<if test="status != null and status != ''">
+				AND status like #{status}
+			</if>
+		</where>
+	</sql>
+	
+	<select id="findByCondition" resultType="demo">
+		select * from demo
+		<include refid="conditionSql" />
+	</select>
+
+	<select id="countByCondition" resultType="long">
+		select count(1) from demo
+		<include refid="conditionSql" />
+	</select>
+
+	<delete id="deleteIds">
+		<if test="ids != null">
+			delete from demo where id in
+			<foreach item="id" collection="ids" open="(" separator="," close=")">#{id}</foreach>
+		</if>
+	</delete>
+	
+</mapper>

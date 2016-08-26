@@ -20,11 +20,11 @@ public class DemoServiceImpl extends AbstractCrudCodeService<Demo, Long>
     implements DemoService {
 
   @Autowired
-  private DemoDao sampleDao;
+  private DemoDao demoDao;
 
   @Override
   public CrudCodeDao<Demo, Long> getDao() {
-    return sampleDao;
+    return demoDao;
   }
 
   @Override

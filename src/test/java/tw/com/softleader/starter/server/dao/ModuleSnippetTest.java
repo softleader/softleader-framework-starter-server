@@ -51,6 +51,19 @@ public class ModuleSnippetTest {
   }
 
   @Test
+  public void testMybatisModule() {
+    Module module = new Module();
+    module.setArtifact("tw.com.softleader:softleader-data-mybatis");
+    module.setRequires(Lists.newArrayList("tw.com.softleader:softleader-data"));
+    module.setRootConfigs(Lists.newArrayList("DataSourceConfig.class"));
+    module.setRemoveRootConfigs(
+        Lists.newArrayList("tw.com.softleader.data.config.DataSourceConfiguration.class"));
+    module.setSources(Lists.newArrayList());
+    module.addSource(new Source("/softleader-data-mybatis"));
+    dao.save(module);
+  }
+
+  @Test
   public void testJpaModule() {
     Module module = new Module();
     module.setArtifact("tw.com.softleader:softleader-data-jpa");

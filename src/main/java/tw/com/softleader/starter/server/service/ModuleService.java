@@ -88,22 +88,24 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
 
     private final Snippet starter;
     private final Collection<Module> snippets;
-    private final Function<String, String> formatter;
+    private final Function<String, String> contentFormatter;
+    private final Function<String, String> pathFormatter;
 
     ArchiveEntries(Snippet starter, Collection<Module> snippets) {
       super();
       this.starter = requireNonNull(starter, "starter");
       this.snippets = requireNonNull(snippets, "snippets");
       this.starter.getProject().collectGlobalInfo(this.snippets);
-      this.formatter = new SnippetSource(this.starter);
+      this.contentFormatter = new SnippetSource(this.starter);
+      this.pathFormatter =
+          this.contentFormatter.andThen(path -> FilenameUtils.normalize(path, true));
     }
 
     Map<ZipArchiveEntry, InputStream> collect() {
       Map<ZipArchiveEntry, InputStream> archives = new HashMap<>();
 
-      starter.getProject().getDirs().stream().map(formatter).forEach(dir -> {
-        String entryName = formatter.apply(dir + "/");
-        entryName = FilenameUtils.normalize(entryName, true);
+      starter.getProject().getDirs().stream().map(contentFormatter).forEach(dir -> {
+        String entryName = pathFormatter.apply(dir + "/");
         archives.put(new ZipArchiveEntry(entryName), null);
         log.debug("Added dir [{}] to zip", entryName);
       });
@@ -128,10 +130,9 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
       if (Files.isDirectory(path)) {
         collectRecursive(archives, src.getFullPath(), path);
       } else {
-        String entryName = formatter
+        String entryName = pathFormatter
             .apply(requireNonNull(src.getEntryName(), "Source [" + src.getModule().getArtifact()
                 + "] - [" + src.getPath() + "] did not determine entryName"));
-        entryName = FilenameUtils.normalize(entryName, true);
         archives.put(new ZipArchiveEntry(entryName), readContent(path));
         log.debug("Added file [{}] to zip", entryName);
       }
@@ -143,22 +144,23 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
         if (Files.list(path).iterator().hasNext()) {
           Files.list(path).forEach(Unchecked.accept(p -> collectRecursive(archives, root, p)));
         } else {
-          String entryName =
-              formatter.apply(path.toAbsolutePath().toString().replace(root, "") + "/");
-          entryName = FilenameUtils.normalize(entryName, true);
+          String absolutePath = path.toAbsolutePath().toString() + "/";
+          log.trace("Removing '{}' in file path: [{}]", root, absolutePath);
+          String entryName = pathFormatter.apply(absolutePath).replace(root, "");
           archives.put(new ZipArchiveEntry(entryName), null);
           log.debug("Added empty dir [{}] to zip", entryName);
         }
       } else {
-        String entryName = formatter.apply(path.toAbsolutePath().toString().replace(root, ""));
-        entryName = FilenameUtils.normalize(entryName, true);
+        String absolutePath = path.toAbsolutePath().toString();
+        log.trace("Removing '{}' in file path: [{}]", root, absolutePath);
+        String entryName = pathFormatter.apply(absolutePath).replace(root, "");
         archives.put(new ZipArchiveEntry(entryName), readContent(path));
         log.debug("Added file [{}] to zip", entryName);
       }
     }
 
     private ByteArrayInputStream readContent(Path path) throws IOException {
-      Function<String, String> converter = formatter;
+      Function<String, String> converter = contentFormatter;
       if (path.getFileName().endsWith("pom.xml")) {
         converter = converter.compose(new Pom(starter));
       } else if (path.getFileName().endsWith("WebApplicationInitializer.java")) {

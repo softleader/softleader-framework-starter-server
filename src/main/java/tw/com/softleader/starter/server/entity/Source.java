@@ -11,6 +11,7 @@ import javax.persistence.Transient;
 import org.apache.commons.io.FilenameUtils;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -47,6 +48,7 @@ public class Source extends GenericEntity<Long> implements EntityJsonIgnore<Long
   @Column(name = "APPEND_DEFAULT_ROOT")
   private boolean appendDefaultRoot = true; // 是否要加上定義在 properties 中的 source.root
 
+  @JsonIgnore
   @Transient
   private transient String root;
 
