@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import tw.com.softleader.commons.compress.ArchiveStream;
 import tw.com.softleader.starter.server.entity.Webapp;
+import tw.com.softleader.starter.server.enums.Wizard;
 import tw.com.softleader.starter.server.pojo.Snippet;
 import tw.com.softleader.starter.server.service.ModuleService;
 import tw.com.softleader.starter.server.service.WebappService;
@@ -46,7 +47,7 @@ public class WebappController {
   public void getZip(@RequestBody @Validated Snippet snippet, HttpServletResponse response)
       throws IOException, ArchiveException {
     log.info("{}", new ObjectMapper().writeValueAsString(snippet));
-    Map<ZipArchiveEntry, InputStream> archives = moduleService.collectSnippets(snippet);
+    Map<ZipArchiveEntry, InputStream> archives = moduleService.collectSnippets(Wizard.WEBAPP, snippet);
     ArchiveStream.of(response.getOutputStream()).compress(archives);
   }
 

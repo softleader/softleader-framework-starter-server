@@ -27,6 +27,7 @@ import tw.com.softleader.domain.config.DefaultDomainConfiguration;
 import tw.com.softleader.starter.server.config.DataSourceConfig;
 import tw.com.softleader.starter.server.config.ServiceConfig;
 import tw.com.softleader.starter.server.entity.Module;
+import tw.com.softleader.starter.server.enums.Wizard;
 import tw.com.softleader.starter.server.pojo.Database;
 import tw.com.softleader.starter.server.pojo.Dependency;
 import tw.com.softleader.starter.server.pojo.ProjectDetails;
@@ -69,7 +70,7 @@ public class ModuleServiceTest {
 
   @Test
   public void testCollectSnippets() throws FileNotFoundException, IOException, ArchiveException {
-    Map<ZipArchiveEntry, InputStream> archives = snippetService.collectSnippets(starter);
+    Map<ZipArchiveEntry, InputStream> archives = snippetService.collectSnippets(Wizard.WEBAPP, starter);
     File archive = new File("/Users/Matt/temp/test.zip");
     ArchiveStream.of(new FileOutputStream(archive)).compress(archives);
     System.out.println(archive.getPath() + " created!");

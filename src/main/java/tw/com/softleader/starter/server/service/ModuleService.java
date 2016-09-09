@@ -37,6 +37,7 @@ import tw.com.softleader.domain.AbstractCrudService;
 import tw.com.softleader.starter.server.dao.ModuleDao;
 import tw.com.softleader.starter.server.entity.Module;
 import tw.com.softleader.starter.server.entity.Source;
+import tw.com.softleader.starter.server.enums.Wizard;
 import tw.com.softleader.starter.server.io.Component;
 import tw.com.softleader.starter.server.io.Datasource;
 import tw.com.softleader.starter.server.io.Pom;
@@ -54,9 +55,9 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
   @Autowired
   private ModuleDao dao;
 
-  public Map<ZipArchiveEntry, InputStream> collectSnippets(Snippet snippet)
+  public Map<ZipArchiveEntry, InputStream> collectSnippets(Wizard wizard, Snippet snippet)
       throws JsonProcessingException {
-    List<Module> snippets = dao.findByArtifactIsNull();
+    List<Module> snippets = dao.findByWizardAndArtifactIsNull(wizard);
     log.debug("Found {} global snippets", snippets.size());
 
     Set<Module> selected = snippet.getDependencies().stream()

@@ -6,6 +6,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -16,6 +18,7 @@ import lombok.Getter;
 import lombok.Setter;
 import tw.com.softleader.data.entity.GenericEntity;
 import tw.com.softleader.data.jpa.converter.StringJoiningConverter;
+import tw.com.softleader.starter.server.enums.Wizard;
 
 @SuppressWarnings("serial")
 @Setter
@@ -23,6 +26,10 @@ import tw.com.softleader.data.jpa.converter.StringJoiningConverter;
 @Entity
 @Table(name = "MODULE")
 public class Module extends GenericEntity<Long> {
+
+  @Column(name = "WIZARD")
+  @Enumerated(EnumType.STRING)
+  private Wizard wizard;
 
   @Column(name = "ARTIFACT")
   private String artifact; // 格式為: [groupId]:[artifactId]

@@ -16,6 +16,7 @@ import tw.com.softleader.starter.server.config.DataSourceConfig;
 import tw.com.softleader.starter.server.config.ServiceConfig;
 import tw.com.softleader.starter.server.entity.Module;
 import tw.com.softleader.starter.server.entity.Source;
+import tw.com.softleader.starter.server.enums.Wizard;
 
 @WithMockUser("matt")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -23,7 +24,7 @@ import tw.com.softleader.starter.server.entity.Source;
     classes = {ServiceConfig.class, DataSourceConfig.class, DefaultDomainConfiguration.class})
 @Transactional
 @Commit
-public class ModuleSnippetTest {
+public class ModuleWebappSnippetTest {
 
   @Autowired
   private ModuleDao dao;
@@ -36,36 +37,40 @@ public class ModuleSnippetTest {
   @Test
   public void testGlobalModule() {
     Module module = new Module();
+    module.setWizard(Wizard.WEBAPP);
     module.setSources(Lists.newArrayList());
-    module.addSource(new Source("/global"));
+    module.addSource(new Source("/webapp/global"));
     dao.save(module);
   }
 
   @Test
   public void testDataModule() {
     Module module = new Module();
+    module.setWizard(Wizard.WEBAPP);
     module.setArtifact("tw.com.softleader:softleader-data");
     module.setSources(Lists.newArrayList());
-    module.addSource(new Source("/softleader-data"));
+    module.addSource(new Source("/webapp/softleader-data"));
     dao.save(module);
   }
 
   @Test
   public void testMybatisModule() {
     Module module = new Module();
+    module.setWizard(Wizard.WEBAPP);
     module.setArtifact("tw.com.softleader:softleader-data-mybatis");
     module.setRequires(Lists.newArrayList("tw.com.softleader:softleader-data"));
     module.setRootConfigs(Lists.newArrayList("DataSourceConfig.class"));
     module.setRemoveRootConfigs(
         Lists.newArrayList("tw.com.softleader.data.config.DataSourceConfiguration.class"));
     module.setSources(Lists.newArrayList());
-    module.addSource(new Source("/softleader-data-mybatis"));
+    module.addSource(new Source("/webapp/softleader-data-mybatis"));
     dao.save(module);
   }
 
   @Test
   public void testJpaModule() {
     Module module = new Module();
+    module.setWizard(Wizard.WEBAPP);
     module.setArtifact("tw.com.softleader:softleader-data-jpa");
     module.setRequires(Lists.newArrayList("tw.com.softleader:softleader-data"));
     module.setRootConfigs(Lists.newArrayList("DataSourceConfig.class"));
@@ -74,23 +79,25 @@ public class ModuleSnippetTest {
     module.setServletFilters(Lists
         .newArrayList("new org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter()"));
     module.setSources(Lists.newArrayList());
-    module.addSource(new Source("/softleader-data-jpa"));
+    module.addSource(new Source("/webapp/softleader-data-jpa"));
     dao.save(module);
   }
 
   @Test
   public void testDomainSchedulingModule() {
     Module module = new Module();
+    module.setWizard(Wizard.WEBAPP);
     module.setArtifact("tw.com.softleader:softleader-domain-scheduling");
     module.setRootConfigs(Lists.newArrayList("SchedulingConfig.class"));
     module.setSources(Lists.newArrayList());
-    module.addSource(new Source("/softleader-domain-scheduling"));
+    module.addSource(new Source("/webapp/softleader-domain-scheduling"));
     dao.save(module);
   }
 
   @Test
   public void testDomainRuleModule() {
     Module module = new Module();
+    module.setWizard(Wizard.WEBAPP);
     module.setArtifact("tw.com.softleader:softleader-domain-rule");
     module.setRootConfigs(
         Lists.newArrayList("tw.com.softleader.rule.config.RuleConfiguration.class"));
@@ -100,17 +107,19 @@ public class ModuleSnippetTest {
   @Test
   public void testSecurity() {
     Module module = new Module();
+    module.setWizard(Wizard.WEBAPP);
     module.setArtifact("tw.com.softleader:softleader-security");
     module.setRequires(Lists.newArrayList("tw.com.softleader:softleader-web-mvc"));
     module.setRootConfigs(Lists.newArrayList("WebSecurityConfig.class"));
     module.setSources(Lists.newArrayList());
-    module.addSource(new Source("/softleader-security"));
+    module.addSource(new Source("/webapp/softleader-security"));
     dao.save(module);
   }
 
   @Test
   public void testWebMvc() {
     Module module = new Module();
+    module.setWizard(Wizard.WEBAPP);
     module.setArtifact("tw.com.softleader:softleader-web-mvc");
     module.setRootConfigs(
         Lists.newArrayList("tw.com.softleader.data.config.DataSourceConfiguration.class",
@@ -118,7 +127,7 @@ public class ModuleSnippetTest {
             "WebSecurityConfig.class", "ServiceConfig.class"));
     module.setServletConfigs(Lists.newArrayList("WebMvcConfig.class"));
     module.setSources(Lists.newArrayList());
-    module.addSource(new Source("/softleader-web-mvc"));
+    module.addSource(new Source("/webapp/softleader-web-mvc"));
     dao.save(module);
   }
 

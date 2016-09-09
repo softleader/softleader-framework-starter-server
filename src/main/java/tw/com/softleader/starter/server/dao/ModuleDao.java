@@ -4,6 +4,7 @@ import java.util.List;
 
 import tw.com.softleader.data.dao.GenericCrudDao;
 import tw.com.softleader.starter.server.entity.Module;
+import tw.com.softleader.starter.server.enums.Wizard;
 
 public interface ModuleDao extends GenericCrudDao<Module, Long> {
 
@@ -14,6 +15,6 @@ public interface ModuleDao extends GenericCrudDao<Module, Long> {
    * 
    * @return
    */
-  public List<Module> findByArtifactIsNull();
+  public List<Module> findByWizardAndArtifactIsNull(Wizard wizard);
 
 }
