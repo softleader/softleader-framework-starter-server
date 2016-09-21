@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver;
 import org.springframework.stereotype.Controller;
@@ -24,7 +24,6 @@ import tw.com.softleader.web.mvc.config.WebMvcConfiguration;
 
 @Configuration
 @EnableWebMvc
-@Primary
 @ComponentScan(basePackages = "{pkg}.**.web", useDefaultFilters = false,
     includeFilters = @Filter(Controller.class))
 public class WebMvcConfig extends WebMvcConfiguration {
