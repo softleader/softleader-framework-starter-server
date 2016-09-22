@@ -100,7 +100,7 @@ public class ModuleWebappSnippetTest {
     module.setWizard(Wizard.WEBAPP);
     module.setArtifact("tw.com.softleader:softleader-domain-rule");
     module.setRootConfigs(
-        Lists.newArrayList("tw.com.softleader.rule.config.RuleConfiguration.class"));
+        Lists.newArrayList("tw.com.softleader.domain.rule.config.DomainRuleConfiguration.class"));
     dao.save(module);
   }
 
