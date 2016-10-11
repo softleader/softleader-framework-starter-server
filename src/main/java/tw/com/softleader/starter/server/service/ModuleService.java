@@ -13,13 +13,17 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
+
+import javax.annotation.PostConstruct;
 
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.io.FilenameUtils;
@@ -51,6 +55,18 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
 
   @Value("${source.root}")
   private String sourceRoot;
+
+  @Value("${ignore.file.names}")
+  private String ignores;
+
+  private Collection<String> ignoreFileNames;
+
+  @PostConstruct
+  public void init() {
+    if (ignores != null) {
+      ignoreFileNames = Arrays.asList(ignores.split(","));
+    }
+  }
 
   @Autowired
   private ModuleDao dao;
@@ -134,8 +150,10 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
         String entryName = pathFormatter
             .apply(requireNonNull(src.getEntryName(), "Source [" + src.getModule().getArtifact()
                 + "] - [" + src.getPath() + "] did not determine entryName"));
-        archives.put(new ZipArchiveEntry(entryName), readContent(path));
-        log.debug("Added file [{}] to zip", entryName);
+        readContent(path).ifPresent(content -> {
+          archives.put(new ZipArchiveEntry(entryName), content);
+          log.debug("Added file [{}] to zip", entryName);
+        });
       }
     }
 
@@ -155,14 +173,18 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
         String absolutePath = path.toAbsolutePath().toString();
         log.trace("Removing '{}' in file path: [{}]", root, absolutePath);
         String entryName = pathFormatter.apply(absolutePath).replace(root, "");
-        archives.put(new ZipArchiveEntry(entryName), readContent(path));
-        log.debug("Added file [{}] to zip", entryName);
+        readContent(path).ifPresent(content -> {
+          archives.put(new ZipArchiveEntry(entryName), content);
+          log.debug("Added file [{}] to zip", entryName);
+        });
       }
     }
 
-    private ByteArrayInputStream readContent(Path path) throws IOException {
+    private Optional<ByteArrayInputStream> readContent(Path path) throws IOException {
       Function<String, String> converter = contentFormatter;
-      if (path.getFileName().endsWith("pom.xml")) {
+      if (ignoreFileNames.contains(path.getFileName().toString())) {
+        return Optional.empty();
+      } else if (path.getFileName().endsWith("pom.xml")) {
         converter = converter.compose(new Pom(starter));
       } else if (path.getFileName().endsWith("WebApplicationInitializer.java")) {
         converter = converter.compose(new WebApplicationInitializer(starter));
@@ -174,7 +196,7 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
       try {
         String content = Files.readAllLines(path).stream().collect(joining("\n"));
         content = converter.apply(content);
-        return new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
+        return Optional.of(new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));
       } catch (Exception e) {
         throw new RuntimeException("Reading [" + path.getFileName() + "] faild", e);
       }
