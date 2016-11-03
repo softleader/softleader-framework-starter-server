@@ -12,6 +12,7 @@ import org.springframework.security.web.method.annotation.AuthenticationPrincipa
 import org.springframework.stereotype.Controller;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
@@ -49,4 +50,9 @@ public class WebMvcConfig extends WebMvcConfiguration {
     argumentResolvers.add(new AuthenticationPrincipalArgumentResolver());
   }
 
+  @Override
+  public void addResourceHandlers(final ResourceHandlerRegistry registry) {
+    super.addResourceHandlers(registry);
+    registry.addResourceHandler("/update/**").addResourceLocations("/update/");
+  }
 }
