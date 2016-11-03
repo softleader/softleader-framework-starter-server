@@ -27,6 +27,9 @@ import tw.com.softleader.starter.server.enums.SwtStyle;
 @Table(name = "WEBAPP")
 public class Webapp extends GenericEntity<Long> implements EntityJsonIgnore<Long> {
 
+  /**
+   * @deprecated 改用 update site..
+   */
   @Column(name = "revision")
   private long revision;
 
