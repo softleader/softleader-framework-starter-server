@@ -1,8 +1,7 @@
 package tw.com.softleader.starter.server.service;
 
-import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toSet;
+import static java.util.Objects.*;
+import static java.util.stream.Collectors.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -41,6 +40,7 @@ import tw.com.softleader.domain.AbstractCrudService;
 import tw.com.softleader.starter.server.dao.ModuleDao;
 import tw.com.softleader.starter.server.entity.Module;
 import tw.com.softleader.starter.server.entity.Source;
+import tw.com.softleader.starter.server.enums.IDE;
 import tw.com.softleader.starter.server.enums.Wizard;
 import tw.com.softleader.starter.server.io.Component;
 import tw.com.softleader.starter.server.io.Datasource;
@@ -123,6 +123,9 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
 
       starter.getProject().getDirs().stream().map(contentFormatter).forEach(dir -> {
         String entryName = pathFormatter.apply(dir + "/");
+        if (!starter.getIde().getFileFilter().test(entryName)) {
+          return;
+        }
         archives.put(new ZipArchiveEntry(entryName), null);
         log.debug("Added dir [{}] to zip", entryName);
       });
@@ -130,12 +133,12 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
       snippets.stream().map(Module::getSources).flatMap(Collection::stream).map(src -> {
         src.setRoot(sourceRoot);
         return src;
-      }).forEach(Unchecked.accept(src -> collect(archives, src)));
+      }).forEach(Unchecked.accept(src -> collect(archives, src, starter.getIde())));
 
       return archives;
     }
 
-    private void collect(Map<ZipArchiveEntry, InputStream> archives, Source src)
+    private void collect(Map<ZipArchiveEntry, InputStream> archives, Source src, IDE ide)
         throws IOException, ClassNotFoundException, URISyntaxException {
       Path path = Paths.get(src.getFullPath());
       if (Files.notExists(path)) {
@@ -145,11 +148,14 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
         throw new IllegalStateException("[" + src.getFullPath() + "] is not a readable path");
       }
       if (Files.isDirectory(path)) {
-        collectRecursive(archives, src.getFullPath(), path);
+        collectRecursive(archives, src.getFullPath(), path, ide);
       } else {
         String entryName = pathFormatter
             .apply(requireNonNull(src.getEntryName(), "Source [" + src.getModule().getArtifact()
                 + "] - [" + src.getPath() + "] did not determine entryName"));
+        if (!ide.getFileFilter().test(entryName)) {
+          return;
+        }
         readContent(path).ifPresent(content -> {
           archives.put(new ZipArchiveEntry(entryName), content);
           log.debug("Added file [{}] to zip", entryName);
@@ -158,14 +164,17 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
     }
 
     private void collectRecursive(Map<ZipArchiveEntry, InputStream> archives, String root,
-        Path path) throws IOException {
+        Path path, IDE ide) throws IOException {
       if (Files.isDirectory(path)) {
         if (Files.list(path).iterator().hasNext()) {
-          Files.list(path).forEach(Unchecked.accept(p -> collectRecursive(archives, root, p)));
+          Files.list(path).forEach(Unchecked.accept(p -> collectRecursive(archives, root, p, ide)));
         } else {
           String absolutePath = path.toAbsolutePath().toString() + "/";
           log.trace("Removing '{}' in file path: [{}]", root, absolutePath);
           String entryName = pathFormatter.apply(absolutePath).replace(root, "");
+          if (!ide.getFileFilter().test(entryName)) {
+            return;
+          }
           archives.put(new ZipArchiveEntry(entryName), null);
           log.debug("Added empty dir [{}] to zip", entryName);
         }
@@ -173,6 +182,9 @@ public class ModuleService extends AbstractCrudService<Module, Long> {
         String absolutePath = path.toAbsolutePath().toString();
         log.trace("Removing '{}' in file path: [{}]", root, absolutePath);
         String entryName = pathFormatter.apply(absolutePath).replace(root, "");
+        if (!ide.getFileFilter().test(entryName)) {
+          return;
+        }
         readContent(path).ifPresent(content -> {
           archives.put(new ZipArchiveEntry(entryName), content);
           log.debug("Added file [{}] to zip", entryName);

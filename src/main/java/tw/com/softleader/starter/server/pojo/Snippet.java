@@ -5,6 +5,7 @@ import java.util.Collection;
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
+import tw.com.softleader.starter.server.enums.IDE;
 
 @Data
 public class Snippet {
@@ -17,5 +18,5 @@ public class Snippet {
   private Collection<Dependency> dependencies;
   @NotNull
   private Database database;
-
+  private IDE ide = IDE.ECLIPSE;
 }
