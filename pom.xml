@@ -10,93 +10,60 @@
     <name>softleader-framework-starter-server</name>
     <url>http://www.softleader.com.tw</url>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <softleader-framework.version>1.1.0.SNAPSHOT</softleader-framework.version>
-        <spring.io.platform.version>2.0.3.RELEASE</spring.io.platform.version>
-        <source.code.version>1.8</source.code.version>
-    </properties>
+    <parent>
+        <groupId>tw.com.softleader</groupId>
+        <artifactId>softleader-platform</artifactId>
+        <version>1.1.0.SNAPSHOT</version>
+    </parent>
 
     <repositories>
-		<repository>
-            <id>releases</id>
-            <name>SoftLeader Framework</name>
+        <repository>
+            <id>softleader-releases</id>
             <url>http://softleader.com.tw:8082/nexus/content/repositories/releases</url>
         </repository>
-		<repository>
-			<id>snapshots</id>
-			<name>SoftLeader Framework</name>
-			<url>http://softleader.com.tw:8082/nexus/content/repositories/snapshots</url>
-		</repository>
-		<repository>
-			<id>thirdparty</id>
-			<url>http://softleader.com.tw:8082/nexus/content/repositories/thirdparty</url>
-		</repository>
-		<!-- for domain-rule -->
-		<repository>
-			<id>jboss-ga-repository</id>
-			<url>http://softleader.com.tw:8082/nexus/content/repositories/jboss-ga-repository/</url>
-		</repository>
+        <repository>
+            <id>softleader-snapshots</id>
+            <url>http://softleader.com.tw:8082/nexus/content/repositories/snapshots</url>
+        </repository>
     </repositories>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>io.spring.platform</groupId>
-                <artifactId>platform-bom</artifactId>
-                <version>${spring.io.platform.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <dependencies>
         <!-- softleader-framework -->
 		<dependency>
 			<groupId>tw.com.softleader</groupId>
 			<artifactId>softleader-commons</artifactId>
-			<version>${softleader-framework.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>tw.com.softleader</groupId>
 			<artifactId>softleader-data</artifactId>
-			<version>${softleader-framework.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>tw.com.softleader</groupId>
 			<artifactId>softleader-data-jpa</artifactId>
-			<version>${softleader-framework.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>tw.com.softleader</groupId>
 			<artifactId>softleader-domain</artifactId>
-			<version>${softleader-framework.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>tw.com.softleader</groupId>
 			<artifactId>softleader-security</artifactId>
-			<version>${softleader-framework.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>tw.com.softleader</groupId>
 			<artifactId>softleader-test</artifactId>
-			<version>${softleader-framework.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>tw.com.softleader</groupId>
 			<artifactId>softleader-util</artifactId>
-			<version>${softleader-framework.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>tw.com.softleader</groupId>
 			<artifactId>softleader-web</artifactId>
-			<version>${softleader-framework.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>tw.com.softleader</groupId>
 			<artifactId>softleader-web-mvc</artifactId>
-			<version>${softleader-framework.version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.postgresql</groupId>
