@@ -1,16 +1,5 @@
 package tw.com.softleader.starter.server.service;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-
-import javax.transaction.Transactional;
-
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.junit.Before;
@@ -20,25 +9,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
 import tw.com.softleader.commons.collect.Lists;
 import tw.com.softleader.commons.compress.ArchiveStream;
-import tw.com.softleader.domain.config.DefaultDomainConfiguration;
-import tw.com.softleader.starter.server.config.DataSourceConfig;
-import tw.com.softleader.starter.server.config.ServiceConfig;
+import tw.com.softleader.starter.server.config.ApplicationConfig;
 import tw.com.softleader.starter.server.entity.Module;
 import tw.com.softleader.starter.server.enums.Wizard;
-import tw.com.softleader.starter.server.pojo.Database;
-import tw.com.softleader.starter.server.pojo.Dependency;
-import tw.com.softleader.starter.server.pojo.ProjectDetails;
-import tw.com.softleader.starter.server.pojo.Snippet;
-import tw.com.softleader.starter.server.pojo.Version;
+import tw.com.softleader.starter.server.pojo.*;
+
+import javax.transaction.Transactional;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
 
 
 @WithMockUser("matt")
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(
-    classes = {ServiceConfig.class, DataSourceConfig.class, DefaultDomainConfiguration.class})
+@ContextConfiguration(classes = ApplicationConfig.class)
 @Transactional
 public class ModuleServiceTest {
 
@@ -65,7 +52,7 @@ public class ModuleServiceTest {
     database.setUsername("sa");
     starter.setDatabase(database);
     starter.setDependencies(
-        Lists.newArrayList(new Dependency("tw.com.softleader", "softleader-data-jpa")));
+            Lists.newArrayList(new Dependency("tw.com.softleader", "softleader-data-jpa")));
   }
 
   @Test
@@ -79,27 +66,27 @@ public class ModuleServiceTest {
 
   @Test
   public void testCollectSnippetsAndSnippets()
-      throws FileNotFoundException, IOException, ArchiveException {
+          throws FileNotFoundException, IOException, ArchiveException {
     Collection<Module> snippets = new ArrayList<>();
     Module s = new Module();
     s.setArtifact("tw.com.softleader:softleader-web");
     s.setRootConfigs(
-        Lists.newArrayList("tw.com.softleader.data.config.DataSourceConfiguration.class",
-            "tw.com.softleader.domain.config.DefaultDomainConfiguration.class",
-            "WebSecurityConfig.class", "ServiceConfig.class"));
+            Lists.newArrayList("tw.com.softleader.data.config.DataSourceConfiguration.class",
+                    "tw.com.softleader.domain.config.DefaultDomainConfiguration.class",
+                    "WebSecurityConfig.class", "ServiceConfig.class"));
     s.setRemoveRootConfigs(Lists.newArrayList());
     s.setServletConfigs(Lists.newArrayList("WebMvcConfig.class"));
     s.setRemoveServletConfigs(Lists.newArrayList());
     s.setServletFilters(Lists.newArrayList());
     s.setRemoveServletFilters(Lists.newArrayList());
     s.setDirs(Lists.newArrayList("src/main/java/{pkgPath}/security/service",
-        "src/main/java/{pkgPath}/index/web", "src/main/resources", "src/main/webapp/WEB-INF/pages",
-        "src/test/java/{pkgPath}", "src/test/resources"));
+            "src/main/java/{pkgPath}/index/web", "src/main/resources", "src/main/webapp/WEB-INF/pages",
+            "src/test/java/{pkgPath}", "src/test/resources"));
     s.setSources(Lists.newArrayList());
     snippets.add(s);
 
     Map<ZipArchiveEntry, InputStream> archives =
-        new ModuleService().new ArchiveEntries(starter, snippets).collect();
+            new ModuleService().new ArchiveEntries(starter, snippets).collect();
     File zip = new File("/Users/Matt/temp/test.zip");
     ArchiveStream.of(new FileOutputStream(zip)).compress(archives);
     System.out.println(zip.getPath() + " created!");

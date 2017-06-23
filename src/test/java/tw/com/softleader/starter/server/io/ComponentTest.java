@@ -5,11 +5,11 @@ import org.junit.Test;
 import org.springframework.orm.jpa.vendor.Database;
 
 
-public class DatasourceTest {
+public class ComponentTest {
 
   @Test
   public void testSmartAnalyseDatabase() {
-    Datasource ds = new Datasource(null);
+    Component ds = new Component(null);
 
     Assert.assertEquals(Database.POSTGRESQL.name(), ds.smartAnalyseDatabase("PostgreSQL"));
     Assert.assertEquals(Database.MYSQL.name(), ds.smartAnalyseDatabase("MySQL"));

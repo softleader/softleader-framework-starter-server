@@ -8,9 +8,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import tw.com.softleader.domain.config.DefaultDomainConfiguration;
-import tw.com.softleader.starter.server.config.DataSourceConfig;
-import tw.com.softleader.starter.server.config.ServiceConfig;
+import tw.com.softleader.starter.server.config.ApplicationConfig;
 import tw.com.softleader.starter.server.entity.Module;
 import tw.com.softleader.starter.server.entity.Source;
 import tw.com.softleader.starter.server.enums.Wizard;
@@ -19,8 +17,7 @@ import javax.transaction.Transactional;
 
 @WithMockUser("matt")
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(
-        classes = {ServiceConfig.class, DataSourceConfig.class, DefaultDomainConfiguration.class})
+@ContextConfiguration(classes = ApplicationConfig.class)
 @Transactional
 @Commit
 public class ModuleWebappSnippetTest {
@@ -122,9 +119,8 @@ public class ModuleWebappSnippetTest {
     module.setWizard(Wizard.WEBAPP);
     module.setArtifact("tw.com.softleader:softleader-web-mvc");
     module.setRootConfigs(
-            Lists.newArrayList("tw.com.softleader.data.config.DataSourceConfiguration.class",
-                    "tw.com.softleader.domain.config.DefaultDomainConfiguration.class",
-                    "WebSecurityConfig.class", "ServiceConfig.class"));
+            Lists.newArrayList(
+                    "WebSecurityConfig.class", "ApplicationConfig.class"));
     module.setServletConfigs(Lists.newArrayList("WebMvcConfig.class"));
     module.setSources(Lists.newArrayList());
     module.addSource(new Source("/webapp/softleader-web-mvc"));
