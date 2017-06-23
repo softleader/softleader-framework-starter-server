@@ -9,7 +9,7 @@ public class ComponentTest {
 
   @Test
   public void testSmartAnalyseDatabase() {
-    Component ds = new Component(null);
+    SnippetSource ds = new SnippetSource(null);
 
     Assert.assertEquals(Database.POSTGRESQL.name(), ds.smartAnalyseDatabase("PostgreSQL"));
     Assert.assertEquals(Database.MYSQL.name(), ds.smartAnalyseDatabase("MySQL"));
